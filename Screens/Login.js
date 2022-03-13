@@ -9,7 +9,6 @@ import {
    TouchableWithoutFeedback,
    KeyboardAvoidingView, 
    Keyboard } from 'react-native';
-
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { authentication } from '../data/FirebaseConfig';
@@ -25,7 +24,7 @@ const Login = ({navigation}) => {
     signInWithEmailAndPassword(authentication, email, password)
     .then((re) =>{
       setIsSignedIn(true);
-      navigation.navigate("Home");
+      navigation.navigate("Monet");
     })
     .catch((re)=>{
       console.log(re)
@@ -61,6 +60,9 @@ const Login = ({navigation}) => {
         placeholderTextColor = {"rgba(255,255,255,0.2)"}
         value = {email}
         onChangeText={(value) => setEmail(value)}
+        keyboardType="email-address"
+        returnKeyType='next'
+        autoCorrect={true}
         >
         </TextInput>
         <TextInput
