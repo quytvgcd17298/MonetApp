@@ -1,5 +1,6 @@
-import React from 'react'
-import { View, Text, TouchableOpacity, TextInput, ScrollView, StyleSheet, KeyboardAvoidingView } from 'react-native'
+import React, { useState } from 'react';
+import { View, StyleSheet} from 'react-native';
+import DropDownPicker from 'react-native-dropdown-picker'
 import { Ionicons } from '@expo/vector-icons'; 
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { FontAwesome } from '@expo/vector-icons'; 
@@ -9,242 +10,205 @@ import { AntDesign } from '@expo/vector-icons';
 import { Fontisto } from '@expo/vector-icons'; 
 import { Entypo } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons'; 
-import { NavigationContainer } from '@react-navigation/native';
 
-
-
-
-const ListItem = ({navigation, route, props}) => {
-
-/*     const { item } = route.params || {};
- */  return (
-    <ScrollView style={{ flex: 1, backgroundColor:'lightGray'}}>
-    <View
-    style = {{
-        marginHorizontal:5,
-        paddingTop:20
-    }}
-    >
-    <TouchableOpacity
-    style = {styles.clickHeader}
-/*     onPress = {()=>{navigation.navigate("Create New", props.item("Food"))}}    
- */    >
-    <Ionicons name="fast-food" size={30} color="black" />
-    <Text>FOOD</Text>
-    </TouchableOpacity>
-
-        <TouchableOpacity
-        style = {styles.clickItems}>
-        <MaterialIcons name="breakfast-dining" size={24} color="black" />        
-        <Text>BREAKFAST</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-        style = {styles.clickItems}>
-        <MaterialIcons name="lunch-dining" size={24} color="black" />        
-        <Text>LUNCH</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-        style = {styles.clickItems}>
-        <MaterialIcons name="dinner-dining" size={24} color="black" />        
-        <Text>DINNER</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-        style = {styles.clickItems}>
-        <FontAwesome name="coffee" size={24} color="black" />
-        <Text>COFFEE</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-        style = {styles.clickItems}>
-        <Ionicons name="restaurant" size={24} color="black" />
-        <Text>RESTAURANT</Text>
-        </TouchableOpacity>
-
-    <TouchableOpacity
-    style = {styles.clickHeader}>
-    <FontAwesome5 name="house-user" size={30} color="black" />
-    <Text>LIVING SERVICE</Text>
-    </TouchableOpacity>
-
-        <TouchableOpacity
-        style = {styles.clickItems}>
-        <MaterialCommunityIcons name="lightning-bolt" size={24} color="black" />
-        <Text>ELECTRIC</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-        style = {styles.clickItems}>
-        <AntDesign name="mobile1" size={24} color="black" />
-        <Text>TELEPHONE CHARGES</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-        style = {styles.clickItems}>
-        <FontAwesome name="fire" size={24} color="black" />
-        <Text>GAS</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-        style = {styles.clickItems}>
-        <Ionicons name="water" size={24} color="black" />
-        <Text>WATER</Text>
-        </TouchableOpacity>
-
-
-        <TouchableOpacity
-        style = {styles.clickItems}>
-        <Fontisto name="world" size={24} color="black" />
-        <Text>INTERNET</Text>
-        </TouchableOpacity>
-
-    <TouchableOpacity
-    style = {styles.clickHeader}>
-    <Ionicons name="person" size={30} color="black" />
-    <Text>PERSONAL SERVICE</Text>
-    </TouchableOpacity>
-
-        <TouchableOpacity  
-        style = {styles.clickItems}>
-        <MaterialCommunityIcons name="shoe-formal" size={24} color="black" />
-        <Text>CLOTHES</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-        style = {styles.clickItems}>
-        <Feather name="watch" size={24} color="black" />
-        <Text>ACCESSORY</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-        style = {styles.clickItems}>
-        <Ionicons name="woman" size={24} color="black" />
-        <Text>GIRL FRIEND</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-        style = {styles.clickItems}>
-        <FontAwesome5 name="gifts" size={24} color="black" />
-        <Text>PARTY, WEDDING, BIRTHDAY...</Text>
-        </TouchableOpacity>
-
-    <TouchableOpacity
-    style = {styles.clickHeader}>
-    <FontAwesome5 name="plane-arrival" size={30} color="black" />
-    <Text>ENJOYMENT</Text>
-    </TouchableOpacity>
-
-    <TouchableOpacity
-        style = {styles.clickItems}>
-        <FontAwesome name="shopping-cart" size={24} color="black" />
-        <Text>SHOPPING</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-        style = {styles.clickItems}>
-        <FontAwesome5 name="headphones" size={24} color="black" />
-        <Text>ENTERTAINMENT</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-        style = {styles.clickItems}>
-        <FontAwesome name="plane" size={24} color="black" />
-        <Text>TRAVEL</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-        style = {styles.clickItems}>
-        <MaterialIcons name="movie" size={24} color="black" />
-        <Text>MOVIE</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-        style = {styles.clickItems}>
-        <MaterialCommunityIcons name="hair-dryer" size={24} color="black" />
-        <Text>BEAUTIFY</Text>
-        </TouchableOpacity>
-
-    <TouchableOpacity
-    style = {styles.clickHeader}>
-    <Entypo name="location" size={30} color="black" />
-    <Text>MOVEMENT</Text>
-    </TouchableOpacity>
-
-        <TouchableOpacity  
-        style = {styles.clickItems}>
-        <FontAwesome5 name="gas-pump" size={24} color="black" />
-        <Text>GASOLINE</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-        style = {styles.clickItems}>
-        <FontAwesome name="taxi" size={24} color="black" />
-        <Text>TAXI</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-        style = {styles.clickItems}>
-        <MaterialIcons name="car-repair" size={24} color="black" />
-        <Text>CAR REPAIR AND MAINTAIN</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-        style = {styles.clickItems}>
-        <FontAwesome5 name="car-side" size={24} color="black" />
-        <Text>OTHER</Text>
-        </TouchableOpacity>
-
-    <TouchableOpacity
-    style = {styles.clickHeader}>
-    <FontAwesome5 name="notes-medical" size={30} color="black" />
-    <Text>HEALTHY</Text>
-    </TouchableOpacity>
-
-        <TouchableOpacity  
-        style = {styles.clickItems}>
-        <FontAwesome5 name="hand-holding-medical" size={24} color="black" />
-        <Text>HEALTHCARE</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-        style = {styles.clickItems}>
-        <FontAwesome5 name="briefcase-medical" size={24} color="black" />
-        <Text>MEDICINE</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-        style = {styles.clickItems}>
-        <MaterialIcons name="sports-soccer" size={24} color="black" />
-        <Text>SPORT</Text>
-        </TouchableOpacity>
-
+const ListItem = (props) => {
+    const [open, setOpen] = useState("");
+    const [items, setItems] = useState([
+        {
+            label: 'FOOD',
+            value: 'FOOD',
+            icon: () => <Ionicons name="fast-food" size={30} color="orange" />
+        },
+        {
+            label: 'Breakfast',
+            value: 'Breakfast',
+            icon: () => <MaterialIcons name="breakfast-dining" size={24} color="black" />
+        },
+        {
+            label: 'Lunch',
+            value: 'Lunch',
+            icon: () => <MaterialIcons name="lunch-dining" size={24} color="black" />
+        },
+        {
+            label: 'Dinner',
+            value: 'Dinner',
+            icon: () => <MaterialIcons name="dinner-dining" size={24} color="black" />
+        },
+        {
+            label: 'Coffee',
+            value: 'Coffee',
+            icon: () => <FontAwesome name="coffee" size={24} color="black" />
+        },
+        {
+            label: 'Restaurant',
+            value: 'Restaurant',
+            icon: () => <Ionicons name="restaurant" size={24} color="black" />
+        },
+        {
+            label: 'LIVING SERVICE',
+            value: 'LIVING SERVICE',
+            icon: () => <FontAwesome5 name="house-user" size={30} color="orange" />
+        },
+        {
+            label: 'Electric',
+            value: 'Electric',
+            icon: () => <MaterialCommunityIcons name="lightning-bolt" size={24} color="black" />
+        },
+        {
+            label: 'Telephone charges',
+            value: 'Telephone charges',
+            icon: () => <AntDesign name="mobile1" size={24} color="black" />
+        },
+        {
+            label: 'Gas',
+            value: 'Gas',
+            icon: () => <FontAwesome name="fire" size={24} color="black" />
+        },
+        {
+            label: 'Water',
+            value: 'Water',
+            icon: () => <Ionicons name="water" size={24} color="black" />
+        },
+        {
+            label: 'Internet',
+            value: 'Internet',
+            icon: () => <Fontisto name="world" size={24} color="black" />
+        },
+        {
+            label: 'PERSONAL SERVICE',
+            value: 'PERSONAL SERVICE',
+            icon: () => <Ionicons name="person" size={30} color="orange" />
+        },
+        {
+            label: 'Clothes',
+            value: 'Clothes',
+            icon: () => <MaterialCommunityIcons name="shoe-formal" size={24} color="black" />
+        },
+        {
+            label: 'Accessory',
+            value: 'Accessory',
+            icon: () => <Feather name="watch" size={24} color="black" />
+        },
+        {
+            label: 'Girl friend',
+            value: 'Girl friend',
+            icon: () => <Ionicons name="woman" size={24} color="black" />
+        },
+        {
+            label: 'Party. Wedding, Birthday...',
+            value: 'Party. Wedding, Birthday...',
+            icon: () => <FontAwesome5 name="gifts" size={24} color="black" />
+        },
+        {
+            label: 'ENJOYMENT',
+            value: 'ENJOYMENT',
+            icon: () => <FontAwesome5 name="plane-arrival" size={30} color="orange" />
+        },
+        {
+            label: 'Shopping',
+            value: 'Shoppuning',
+            icon: () => <FontAwesome name="shopping-cart" size={24} color="black" />
+        },
+        {
+            label: "Entertainment",
+            value: "Entertainment",
+            icon: () => <FontAwesome5 name="headphones" size={24} color="black" />
+        },
+        {
+            label: "Travel",
+            value: "Travel",
+            icon: () => <FontAwesome name="plane" size={24} color="black" />
+        },
+        {
+            label: "Movie",
+            value: "Movie",
+            icon: () => <MaterialIcons name="movie" size={24} color="black" />
+        },
+        {
+            label: "Beautify",
+            value: "Beautify",
+            icon: () => <MaterialCommunityIcons name="hair-dryer" size={24} color="black" />
+        },
+        {
+            label: "MOVEMENT",
+            value: "MOVEMENT",
+            icon: () => <Entypo name="location" size={30} color="orange" />
+        },
+        {
+            label: "Gasoline",
+            value: "Gasoline",
+            icon: () => <FontAwesome5 name="gas-pump" size={24} color="black" />
+        },
+        {
+            label: "Taxi",
+            value: "Taxi",
+            icon: () => <FontAwesome name="taxi" size={24} color="black" />
+        },
+        {
+            label: "Car repair and maintain",
+            value: "Car repair and maintain",
+            icon: () => <MaterialIcons name="car-repair" size={24} color="black" />
+        },
+        {
+            label: "Other",
+            value: "Other",
+            icon: () => <FontAwesome5 name="car-side" size={24} color="black" />
+        },
+        {
+            label: "HEALTHY",
+            value: "HEALTHY",
+            icon: () => <FontAwesome5 name="notes-medical" size={30} color="orange" />
+        },
+        {
+            label: "Healthcare",
+            value: "Healthcare",
+            icon: () => <FontAwesome5 name="hand-holding-medical" size={24} color="black" />
+        },
+        {
+            label: "Medicine",
+            value: "Medicine",
+            icon: () => <FontAwesome5 name="briefcase-medical" size={24} color="black" />
+        },
+        {
+            label: "Sport",
+            value: "Sport",
+            icon: () => <MaterialIcons name="sports-soccer" size={24} color="black" />
+        },
+        
+]);
+        
+  return (
+    <View>
+        <DropDownPicker
+        listMode="SCROLLVIEW"
+        autoScroll={true}
+        open={open}
+        value={props.value}
+        items={items}
+        setOpen={setOpen}
+        setValue={props.setValue}
+        setItems={setItems}
+        onSelectItem={(item) => {
+            console.log(item);
+          }}        
+        style={styles.dropdown}
+        onChangeValue={props.onChangeValue}
+        placeholder={"Select an item"}
+        >
+        </DropDownPicker>
     </View>
-    </ScrollView>
-    )
+  )
 }
 
 const styles = StyleSheet.create({
-    clickHeader:{
-        flexDirection:'row',
-        alignItems:"center",
-        justifyContent:"flex-start",
-        height:50,
-        paddingHorizontal:30,
-        backgroundColor:'#D7D7D7',
-        borderRadius:5,
-        margin:5
+    dropdown: {
+      width:350,
+      backgroundColor:"gray",
+      borderRadius: 5,
+      marginVertical: 7,
+      margin:12,
+      borderBottomWidth:5
     },
-    clickItems:{
-        flexDirection:'row',
-        alignItems:"center",
-        justifyContent:"flex-start",
-        height:40,
-        paddingHorizontal:50,
-        backgroundColor:'#F2F2F2',
-        borderRadius:5,
-    }
-})
+});  
 
-export default ListItem
+export default ListItem;

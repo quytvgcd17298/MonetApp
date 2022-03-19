@@ -1,0 +1,111 @@
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, FlatList, ScrollView, StyleSheet, KeyboardAvoidingView } from 'react-native'
+import { Ionicons  } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons'; 
+import { MaterialIcons } from '@expo/vector-icons'; 
+import CurrencyInput from 'react-native-currency-input';
+import { AntDesign } from '@expo/vector-icons';
+import { Fontisto } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons'; 
+
+export const History = () => {
+
+  function renderNavBar() {
+    return(
+      <View>
+      <View
+          style={{
+            flexDirection:"row",
+            height:60,
+            justifyContent:"space-between",
+            alignItems:'flex-end',
+            paddingHorizontal:15,
+            backgroundColor:'#02F08C',
+          }}
+        >
+          <TouchableOpacity>
+          <Ionicons  name="arrow-back-outline" size={30} color= "black"/>
+          </TouchableOpacity>
+          <Text
+          style={{
+            fontSize:30,
+            marginBottom:5,
+            fontWeight:'bold',
+            textTransform:'uppercase'
+          }}
+          >HISTORY</Text>
+          <TouchableOpacity
+          >
+          <FontAwesome name="history" size={30} color="black" />          
+          </TouchableOpacity>
+        </View>
+      <View
+      style={{flexDirection:"row",
+      height:80,
+      justifyContent:"space-between",
+      alignItems:'flex-end',
+      paddingHorizontal:20,
+      backgroundColor:'#02F08C'}}>
+      <TouchableOpacity style = {styles.button}>
+        <Text
+        style={{
+          color:'green',
+          fontWeight:'bold'
+        }}
+        >{"REVENUE (green)"}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style = {styles.button}>
+        <Text
+        style={{
+          color:'red',
+          fontWeight:'bold'
+        }}>{"EXPENDITURE (red)"}</Text>
+      </TouchableOpacity>
+      </View>
+    </View>
+    )
+  }
+
+    return (
+    <View
+    style={{
+      flex:1,
+      backgroundColor:'#02F08C',
+    }}
+    >
+      {renderNavBar()}
+      <ScrollView
+      style={styles.childContainer}>
+      <FlatList
+        /* data={data}
+        keyExtractor={(item) => String(item.Id)}
+        renderItem={({ item }) => <UserItem user={item} navigation={navigation}  />} */
+      />
+      </ScrollView>
+    </View>
+  )
+}
+const styles = StyleSheet.create({
+  container:{
+    flex: 1,
+    backgroundColor: '#02F08C',
+    alignContent:'center',
+    justifyContent:'center',
+  },
+  button:{
+    justifyContent:'center',
+    alignItems:'center',
+    flexDirection:'column',
+    width:150,
+    height:50,
+    backgroundColor:'white',
+    borderWidth:1,
+    borderRadius:5,
+    marginBottom:10
+  },
+  childContainer:{
+    backgroundColor: '#B3D3C2',
+  }
+})

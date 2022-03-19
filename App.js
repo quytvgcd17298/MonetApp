@@ -19,7 +19,9 @@ import { Entypo } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons'; 
 import { Feather } from '@expo/vector-icons'; 
 
-import ListItem from "./components/ListItem";
+import { History } from "./Screens/History";
+
+
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -102,7 +104,10 @@ export default function App() {
      options = {{
         headerShown:false }}
      />
-     <Stack.Screen name = "ListItem" component={ListItem}></Stack.Screen>
+     <Stack.Screen name = "History" component={History}
+     options = {{
+        headerShown:false }} 
+      ></Stack.Screen>
      </Stack.Navigator>
     </NavigationContainer>
   );
