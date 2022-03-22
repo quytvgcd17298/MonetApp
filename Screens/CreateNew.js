@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity, TextInput, ScrollView, StyleSheet, KeyboardAvoidingView } from 'react-native'
+import { View, Text, TouchableOpacity, TextInput, ScrollView, StyleSheet, useEffect } from 'react-native'
 import { Ionicons  } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons'; 
@@ -10,19 +10,44 @@ import { Fontisto } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 
 import ListItem from '../components/ListItem';
-import PickDate from '../components/PickDate';
 
+import DateTimePicker from '@react-native-community/datetimepicker'
+
+import { db } from '../data/FirebaseConfig';
+import { collection, addDoc, doc } from "firebase/firestore"
 
 const CreateNew = ({navigation}) => {
   const [moneyValue, setMoneyValue] = React.useState(""); // can also be null
   const [itemValue, setItemValue] = useState("");
-  const [date, setDate]= useState("");
+
+  const [date, setDate] = useState(new Date());
+  const [mode, setMode] = useState('date');
+  const [show, setShow] = useState(false);
+  const [textDate, setTextDate] = useState('Time is empty')
+
   const [description, setDescription] = useState("");
   const [event, setEvent] = useState("");
   const [who, setWho] = useState("");
   const [location, setLocation]=useState("");
-  const [picture, setPicture] = useState("")
-  const [open, setOpen] = useState(false)
+
+  const dataCollectionRef = collection(db, "Information");
+  const createInput = async () => {
+    await addDoc(dataCollectionRef, { Amount: moneyValue, Item: itemValue, Date: date, Description: description, Event: event, WithWho: who, Location: location })
+    console.log("Done")
+  }
+
+
+   /*  const addMonet = document.querySelector('.add')
+    addMonet.addEventListener('submit', (e) => {
+    e.preventDefault()
+
+    addDoc(dataCollectionRef, {
+      Amount: moneyValue, Item: itemValue, Date: date, Description: description, Event: event, WithWho: who, Location: location 
+    })
+    .then(()=> {
+      addMonet.reset()
+    })
+  }) */
 
 
     function renderNavBar() {
@@ -45,26 +70,32 @@ const CreateNew = ({navigation}) => {
             fontSize:26,
             marginBottom:5,
             fontWeight:'bold'
-          }}
-          >Revenue</Text>
-          <TouchableOpacity
-          onPress={()=>navigation.navigate("History")}
-          >
+          }}>Revenue</Text>
+          <TouchableOpacity onPress={()=>navigation.navigate("HistoryItem")}>
           <FontAwesome name="history" size={30} color="black" />          
           </TouchableOpacity>
         </View>
       )
     } 
 
-    /* function openCamera(){
-      ImagePicker.openPicker({
-        width: 300,
-        height: 400,
-        cropping: false
-      }).then(image => {
-        console.log(image);
-      });
-    } */
+    const onChangeDate = (event, selectedDate) => {
+      const currentDate = selectedDate || date;
+      setShow(Platform.OS === 'ios');
+      setDate(currentDate);
+ 
+      let tempDate = new Date(currentDate);
+      let fDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear();
+      let fTime = 'Hours: ' + tempDate.getHours() + ' | Minutes: ' + tempDate.getMinutes();
+      setTextDate(fDate + "," + " " + " " + " " + " " + " " + " " + " " + " "  + fTime)
+ 
+      console.log(fDate + '(' + fTime + ')')
+   }
+ 
+   const showModeDate = (currentMode) => {
+     setShow(true);
+     setMode(currentMode);
+   }
+
 
   return (
     <View style={{ flex: 1, backgroundColor:'lightGray'}}>
@@ -75,8 +106,7 @@ const CreateNew = ({navigation}) => {
           alignItems:'center',
           justifyContent:'center',
           paddingHorizontal:7,
-        }}
-        >
+        }}>
           <Text
           style={{
             fontSize:18,
@@ -146,9 +176,71 @@ const CreateNew = ({navigation}) => {
           }}
           >
           <MaterialIcons name="date-range" size={24} color="black" />
-          <PickDate></PickDate>
+          <View>
+            <View
+            style={{
+              flexDirection:'row',
+              padding:12,
+              margin:5
+            }}
+            >
+            <View>
+              <TouchableOpacity
+              style={{
+                width:170,
+                height:40,
+                borderBottomWidth:1,
+                justifyContent:'center',
+                alignItems:'center',
+              }}
+              onPress={()=> showModeDate('date')}
+              >
+                <Text
+                style = {{
+                  color:'#AFAFAF'}}
+                >Select Date</Text>
+              </TouchableOpacity>
+            </View>
+            <View>
+              <TouchableOpacity
+              style={{
+                width:170,
+                height:40,
+                borderBottomWidth:1,
+                justifyContent:'center',
+                alignItems:'center',
+              }}
+              onPress={()=> showModeDate('time')}
+              >
+                <Text
+                style = {{
+                  color:'#AFAFAF'
+                }}>Select Time</Text>
+              </TouchableOpacity>
+            </View>
+            </View>
+            <View style = {{ alignItems:'center', justifyContent:'center'}}>
+            <Text
+            style={{
+              paddingTop:20
+            }}
+            >{textDate}</Text>
+            </View>
+
+          {show &&(
+            <DateTimePicker
+            testID='dateTimePicker'
+            value={date}
+            mode={mode}
+            is24Hour={true}
+            display='default'
+            onChange={onChangeDate} 
+            ></DateTimePicker>
+          )}
+          </View>
           </View>
 
+          
           <View
           style={{
             flexDirection:"row",
@@ -255,6 +347,7 @@ const CreateNew = ({navigation}) => {
             textTransform:'uppercase',
             color:'white'
           }}
+          onPress={createInput}
           >Save</Text>
         </TouchableOpacity>
         </View>
