@@ -4,7 +4,7 @@ import { Ionicons  } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 
 import { db } from '../data/FirebaseConfig';
-import { addDoc, collection, getDocs } from "firebase/firestore"
+import { collection, getDocs, query, orderBy } from "firebase/firestore"
 
 export  const HistoryItem = ( {navigation} ) => {
   const [monetData, setMonetData] = useState([]);
@@ -18,11 +18,10 @@ export  const HistoryItem = ( {navigation} ) => {
     getMonetData();
   }, []);
 
-
 /*   const detailPress= () =>{
     navigation.navigate("ItemInputDetail");
-  }; */
-
+  };
+ */
   function renderNavBar() {
     return(
       <View>
@@ -90,7 +89,7 @@ export  const HistoryItem = ( {navigation} ) => {
             <View>
               <View style={{flexDirection:'row', justifyContent:"space-between"}}>
               <Text style={{fontSize:20, padding:5, fontWeight:'bold', paddingLeft:25}}>{item.Amount}$</Text>
-              <Text style={{fontSize:16, padding:5, paddingRight:25}}>{new Date(item.Date.toDate()).toDateString()}</Text>
+              <Text style={{fontSize:16, padding:5, paddingRight:25}}>{item.Date}</Text>
               </View>
               <View
               style={{
@@ -103,11 +102,10 @@ export  const HistoryItem = ( {navigation} ) => {
                 borderLeftWidth:1,
               }}>
                 <View style = {{flexDirection:'row', justifyContent:"space-between"}}>
-                <TouchableOpacity
-                >
+                <TouchableOpacity>
                 <Text style={{padding:10, fontSize:20, fontWeight:'bold'}}>{item.Item}</Text>
-                <Text style={{padding:10, fontSize:20}}>{item.Amount}$</Text>
                 </TouchableOpacity>
+                <Text style={{padding:10, fontSize:20}}>{item.Amount}$</Text>
                 </View>              
               </View>
             </View>

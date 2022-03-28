@@ -19,8 +19,8 @@ import { Entypo } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons'; 
 import { Feather } from '@expo/vector-icons'; 
 
-import { History } from "./Screens/History";
-import { HistoryItem } from "./Screens/HistoryItem";
+/* import { History } from "./Screens/History";
+ */import { HistoryItem } from "./Screens/HistoryItem";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -104,10 +104,10 @@ export default function App() {
      options = {{
         headerShown:false }}
      />
-     <Stack.Screen name = "History" component={History}
+     {/* <Stack.Screen name = "History" component={History}
      options = {{
         headerShown:false }} 
-      ></Stack.Screen>
+      ></Stack.Screen> */}
       <Stack.Screen name = "HistoryItem" component={HistoryItem}
      options = {{
         headerShown:false }}>

@@ -8,8 +8,7 @@ import {
    TextInput, 
    TouchableWithoutFeedback,
    KeyboardAvoidingView, 
-   Keyboard } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+   Keyboard, TouchableOpacity } from 'react-native';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { authentication } from '../data/FirebaseConfig';
 

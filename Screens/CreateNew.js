@@ -32,23 +32,10 @@ const CreateNew = ({navigation}) => {
 
   const dataCollectionRef = collection(db, "Information");
   const createInput = async () => {
-    await addDoc(dataCollectionRef, { Amount: moneyValue, Item: itemValue, Date: date, Description: description, Event: event, WithWho: who, Location: location })
+    await addDoc(dataCollectionRef, { Amount: moneyValue, Item: itemValue, Date: textDate, Description: description, Event: event, WithWho: who, Location: location })
+    navigation.navigate("HistoryItem");
     console.log("Done")
   }
-
-
-   /*  const addMonet = document.querySelector('.add')
-    addMonet.addEventListener('submit', (e) => {
-    e.preventDefault()
-
-    addDoc(dataCollectionRef, {
-      Amount: moneyValue, Item: itemValue, Date: date, Description: description, Event: event, WithWho: who, Location: location 
-    })
-    .then(()=> {
-      addMonet.reset()
-    })
-  }) */
-
 
     function renderNavBar() {
       return(
@@ -86,7 +73,7 @@ const CreateNew = ({navigation}) => {
       let tempDate = new Date(currentDate);
       let fDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear();
       let fTime = 'Hours: ' + tempDate.getHours() + ' | Minutes: ' + tempDate.getMinutes();
-      setTextDate(fDate + "," + " " + " " + " " + " " + " " + " " + " " + " "  + fTime)
+      setTextDate(fDate + ", " +fTime)
  
       console.log(fDate + '(' + fTime + ')')
    }
