@@ -19,13 +19,21 @@ const Register = ({navigation}) => {
   const[password, setPassword] = useState("");
 
   const registerUser =() => {
-    createUserWithEmailAndPassword(authentication, email, password)
-    .then((re) =>{
-      console.log(re);
-    })
-    .catch((re)=>{
-      console.log(re)
-    })
+    if ( email === "") {
+      alert("Please enter your email")
+    }
+    else if ( password === "") {
+      alert("Please enter your password")
+    } else {
+      createUserWithEmailAndPassword(authentication, email, password)
+      .then((re) =>{
+        console.log(re);
+      })
+      .catch((re)=>{
+        console.log(re)
+        alert("Invalid email or password")
+      })
+    }
   }
  
   const loginNavigation = () => {

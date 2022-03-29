@@ -4,11 +4,17 @@ import { Ionicons  } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 
 import { db } from '../data/FirebaseConfig';
-import { collection, getDocs, query, orderBy } from "firebase/firestore"
+import { collection, getDocs, deleteDoc, query, orderBy, doc } from "firebase/firestore"
 
 export  const HistoryItem = ( {navigation} ) => {
   const [monetData, setMonetData] = useState([]);
   const dataCollectionRef = collection(db, "Information");
+
+  const deleteItem = async (id) => {
+    const itemDoc = doc(db, "Information", id);
+    await deleteDoc(itemDoc);
+    navigation.navigate("Monet");
+  };
 
   useEffect(()=>{
     const getMonetData = async () => {
@@ -17,6 +23,7 @@ export  const HistoryItem = ( {navigation} ) => {
     };
     getMonetData();
   }, []);
+
 
 /*   const detailPress= () =>{
     navigation.navigate("ItemInputDetail");
@@ -35,7 +42,8 @@ export  const HistoryItem = ( {navigation} ) => {
             backgroundColor:'#02F08C',
           }}
         >
-          <TouchableOpacity>
+          <TouchableOpacity
+          onPress={()=>{navigation.navigate("Monet")}}>
           <Ionicons  name="arrow-back-outline" size={30} color= "black"/>
           </TouchableOpacity>
           <Text
@@ -68,7 +76,7 @@ export  const HistoryItem = ( {navigation} ) => {
         style={{
           color:'red',
           fontWeight:'bold'
-        }}>{"EXPENDITURE (red)"}</Text>
+        }}></Text>
       </TouchableOpacity>
       </View>
     </View>
@@ -103,10 +111,37 @@ export  const HistoryItem = ( {navigation} ) => {
               }}>
                 <View style = {{flexDirection:'row', justifyContent:"space-between"}}>
                 <TouchableOpacity>
-                <Text style={{padding:10, fontSize:20, fontWeight:'bold'}}>{item.Item}</Text>
+                <Text style={{padding:10, fontSize:20, fontWeight:'bold'}}>Item: {item.Item}</Text>
+                <Text style={{padding:10, fontSize:16,}}>Description: {item.Description}</Text>
+                <Text style={{padding:10, fontSize:16,}}>Event: {item.Event}</Text>
+                <Text style={{padding:10, fontSize:16,}}>Location: {item.Location}</Text>
+                <Text style={{padding:10, fontSize:16,}}>With: {item.WithWho}</Text>
                 </TouchableOpacity>
                 <Text style={{padding:10, fontSize:20}}>{item.Amount}$</Text>
-                </View>              
+                </View>
+                <View
+              style={{flexDirection:"row",
+              height:80,
+              justifyContent:"space-between",
+              alignItems:'flex-end',
+              paddingHorizontal:20,}}>
+              <TouchableOpacity style = {styles.button}>
+                <Text
+                style={{
+                  color:'green',
+                  fontWeight:'bold'
+                }}
+                onPress={()=> {navigation.navigate("EditPage")}}
+                >EDIT</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style = {styles.button} onPress={()=>{deleteItem(item.id)}}>
+                <Text
+                style={{
+                  color:'red',
+                  fontWeight:'bold'
+                }}>DELETE</Text>
+              </TouchableOpacity>
+              </View>              
               </View>
             </View>
            )

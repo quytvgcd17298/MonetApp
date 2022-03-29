@@ -13,6 +13,7 @@ import MyWallet from './Screens/MyWallet'
 import CreateNew from "./Screens/CreateNew"; 
 import Analysis from "./Screens/Analysis"; 
 import More from "./Screens/More";
+import EditPage from "./Screens/EditPage"
 
 import { FontAwesome5 } from '@expo/vector-icons'; 
 import { Entypo } from '@expo/vector-icons'; 
@@ -24,6 +25,42 @@ import { Feather } from '@expo/vector-icons';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+
+export default function App() {
+  return (
+    <NavigationContainer>
+     <Stack.Navigator
+      initialRouteName="Login"
+      /* screenOptions={{
+      headerStyle: {
+        backgroundColor:"white"
+      },
+      headerTransparent:false,
+      headerTintColor: "black",
+      headerBackTitle: "Back",
+    }} */>
+     <Stack.Screen name = "Login" component = {Login}/>
+     <Stack.Screen name = "Register" component = {Register}/>
+     <Stack.Screen name = "Monet" component = {TabNavigator}
+     options = {{
+        headerShown:false }}
+     />
+     {/* <Stack.Screen name = "History" component={History}
+     options = {{
+        headerShown:false }} 
+      ></Stack.Screen> */}
+      <Stack.Screen name = "HistoryItem" component={HistoryItem}
+      options = {{
+      headerShown:false }}>
+      </Stack.Screen>
+      <Stack.Screen name = "EditPage" component={EditPage}
+      options = {{
+      headerShown:false }}>
+      </Stack.Screen>
+     </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
 
 function TabNavigator() {
   return (
@@ -83,37 +120,6 @@ function TabNavigator() {
         }}
       }}/>
     </Tab.Navigator>
-  );
-}
-export default function App() {
-  return (
-    <NavigationContainer>
-     <Stack.Navigator
-      initialRouteName="Login"
-      /* screenOptions={{
-      headerStyle: {
-        backgroundColor:"white"
-      },
-      headerTransparent:false,
-      headerTintColor: "black",
-      headerBackTitle: "Back",
-    }} */>
-     <Stack.Screen name = "Login" component = {Login}/>
-     <Stack.Screen name = "Register" component = {Register}/>
-     <Stack.Screen name = "Monet" component = {TabNavigator}
-     options = {{
-        headerShown:false }}
-     />
-     {/* <Stack.Screen name = "History" component={History}
-     options = {{
-        headerShown:false }} 
-      ></Stack.Screen> */}
-      <Stack.Screen name = "HistoryItem" component={HistoryItem}
-     options = {{
-        headerShown:false }}>
-        </Stack.Screen>
-     </Stack.Navigator>
-    </NavigationContainer>
   );
 }
 

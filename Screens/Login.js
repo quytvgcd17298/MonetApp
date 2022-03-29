@@ -20,14 +20,22 @@ const Login = ({navigation}) => {
   const[password, setPassword] = useState("");
 
   const loginHandlle =() => {
-    signInWithEmailAndPassword(authentication, email, password)
-    .then((re) =>{
-      setIsSignedIn(true);
-      navigation.navigate("Monet");
-    })
-    .catch((re)=>{
-      console.log(re)
-    })
+    if ( email === "") {
+      alert("Please enter your email")
+    }
+    else if ( password === "") {
+      alert("Please enter your password")
+    } else {
+      signInWithEmailAndPassword(authentication, email, password)
+      .then((re) =>{
+        setIsSignedIn(true);
+        navigation.navigate("Monet");
+      })
+      .catch((re)=>{
+        console.log(re)
+        alert("Invalid email or password")
+      })
+    }
   }
 
   const registerNavigation = () => {

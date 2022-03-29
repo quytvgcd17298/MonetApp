@@ -14,25 +14,24 @@ import ListItem from '../components/ListItem';
 import DateTimePicker from '@react-native-community/datetimepicker'
 
 import { db } from '../data/FirebaseConfig';
-import { collection, addDoc, doc } from "firebase/firestore"
+import { collection, updateDoc, doc } from "firebase/firestore"
 
-const CreateNew = ({navigation}) => {
+const EditPage = ({route, navigation}) => {
   const [moneyValue, setMoneyValue] = React.useState(""); // can also be null
   const [itemValue, setItemValue] = useState("");
-
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
   const [textDate, setTextDate] = useState('Time is empty')
-
   const [description, setDescription] = useState("");
   const [event, setEvent] = useState("");
   const [who, setWho] = useState("");
   const [location, setLocation]=useState("");
 
   const dataCollectionRef = collection(db, "Information");
-  const createInput = async () => {
-    await addDoc(dataCollectionRef, { Amount: moneyValue, Item: itemValue, Date: textDate, Description: description, Event: event, WithWho: who, Location: location })
+
+  const updateInput = async ( id, ) => {
+    await updateDoc(dataCollectionRef, { Amount: moneyValue, Item: itemValue, Date: textDate, Description: description, Event: event, WithWho: who, Location: location })
     navigation.navigate("HistoryItem");
     console.log("Done")
   }
@@ -46,7 +45,7 @@ const CreateNew = ({navigation}) => {
             justifyContent:"space-between",
             alignItems:'flex-end',
             paddingHorizontal:15,
-            backgroundColor:'#02F08C',
+            backgroundColor:'#6699FF',
           }}
         >
           <TouchableOpacity
@@ -58,11 +57,9 @@ const CreateNew = ({navigation}) => {
           style={{
             fontSize:26,
             marginBottom:5,
-            fontWeight:'bold'
-          }}>Revenue</Text>
-          <TouchableOpacity onPress={()=>navigation.navigate("HistoryItem")}>
-          <FontAwesome name="history" size={30} color="black" />          
-          </TouchableOpacity>
+            fontWeight:'bold',
+            marginRight:170,
+          }}>EDIT</Text>
         </View>
       )
     } 
@@ -115,7 +112,7 @@ const CreateNew = ({navigation}) => {
           <FontAwesome5 name="money-bill-alt" size={28} color="black" />
           <CurrencyInput
           style={{
-            backgroundColor: "#9AF9D1",
+            backgroundColor: "#6699FF",
             color: "black",
             width: 350,
             height: 40,
@@ -364,4 +361,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default CreateNew;
+export default EditPage;
