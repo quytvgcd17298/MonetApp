@@ -4,22 +4,24 @@ import { Ionicons  } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 
 import { db } from '../data/FirebaseConfig';
-import { collection, getDocs, deleteDoc, query, orderBy, doc } from "firebase/firestore"
+import { collection, getDocs, deleteDoc, query, orderBy, doc, updateDoc } from "firebase/firestore"
 
 export  const HistoryItem = ( {navigation} ) => {
   const [monetData, setMonetData] = useState([]);
-  const dataCollectionRef = collection(db, "Information");
+  const dataCollectionRef = collection(db, "information");
+
 
   const deleteItem = async (id) => {
-    const itemDoc = doc(db, "Information", id);
+    const itemDoc = doc(db, "information", id);
     await deleteDoc(itemDoc);
     navigation.navigate("Monet");
   };
 
+
   useEffect(()=>{
     const getMonetData = async () => {
-      const data = await getDocs(dataCollectionRef);
-      setMonetData(data.docs.map((doc) => ({...doc.data(), id: doc.id})))
+    const mySnapshot = await getDocs(dataCollectionRef);
+    setMonetData(mySnapshot.docs.map((doc) => ({...doc.data(), id: doc.id})))
     };
     getMonetData();
   }, []);
@@ -131,7 +133,7 @@ export  const HistoryItem = ( {navigation} ) => {
                   color:'green',
                   fontWeight:'bold'
                 }}
-                onPress={()=> {navigation.navigate("EditPage")}}
+                onPress={()=>{navigation.navigate("EditPage", item.id)}}
                 >EDIT</Text>
               </TouchableOpacity>
               <TouchableOpacity style = {styles.button} onPress={()=>{deleteItem(item.id)}}>

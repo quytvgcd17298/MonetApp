@@ -14,9 +14,9 @@ import ListItem from '../components/ListItem';
 import DateTimePicker from '@react-native-community/datetimepicker'
 
 import { db } from '../data/FirebaseConfig';
-import { collection, updateDoc, doc } from "firebase/firestore"
+import { collection, updateDoc, doc, setDoc } from "firebase/firestore"
 
-const EditPage = ({route, navigation}) => {
+const EditPage = ({ route, navigation }) => {
   const [moneyValue, setMoneyValue] = React.useState(""); // can also be null
   const [itemValue, setItemValue] = useState("");
   const [date, setDate] = useState(new Date());
@@ -28,13 +28,14 @@ const EditPage = ({route, navigation}) => {
   const [who, setWho] = useState("");
   const [location, setLocation]=useState("");
 
-  const dataCollectionRef = collection(db, "Information");
+  const dataCollectionRef = collection(db, "information");
 
-  const updateInput = async ( id, ) => {
-    await updateDoc(dataCollectionRef, { Amount: moneyValue, Item: itemValue, Date: textDate, Description: description, Event: event, WithWho: who, Location: location })
-    navigation.navigate("HistoryItem");
-    console.log("Done")
-  }
+/*   const editItem  = async (item) => {
+    const docRef = doc(db, "information", item.id);
+    await updateDoc(docRef, {
+      id: route.params.id
+    })
+  } */
 
     function renderNavBar() {
       return(
@@ -49,7 +50,7 @@ const EditPage = ({route, navigation}) => {
           }}
         >
           <TouchableOpacity
-          onPress={()=>{navigation.navigate("Home")}}
+          onPress={()=>{navigation.navigate("HistoryItem")}}
           >
           <Ionicons  name="arrow-back-outline" size={30} color= "black"/>
           </TouchableOpacity>
@@ -146,8 +147,8 @@ const EditPage = ({route, navigation}) => {
           >
           <AntDesign name="questioncircle" size={24} color="black" />
           <ListItem
-          onChangeValue={(value) => {
-            setItemValue(value);
+          onChangeValue={( value ) => {
+            setItemValue( value );
           }}
           value={itemValue}
           setValue={setItemValue}
@@ -333,7 +334,7 @@ const EditPage = ({route, navigation}) => {
             textTransform:'uppercase',
             color:'white'
           }}
-          onPress={createInput}
+          onPress={()=> {editItem()}}
           >Save</Text>
         </TouchableOpacity>
         </View>

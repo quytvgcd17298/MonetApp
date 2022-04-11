@@ -11,7 +11,22 @@ import {
 import { db } from '../data/FirebaseConfig';
 import { collection, getDocs, query, orderBy } from "firebase/firestore"
 
+
 const Home = () => {
+
+  
+/*   const docRef = doc(db, "informattion", "Amount");
+  const docSnap = await getDocs(docRef);
+  if (docSnap.exists()) {
+    console.log("Document data:", docSnap.data());
+  } else {
+    // doc.data() will be undefined in this case
+    console.log("No such document!");
+  } */
+  
+
+
+
   return (
     <View
     style={styles.container}
