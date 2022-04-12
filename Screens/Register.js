@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import {
    Image, 
    SafeAreaView,
+   ScrollView,
    View, 
    Text, 
    StyleSheet, 
@@ -11,14 +12,21 @@ import {
    Keyboard,
    TouchableOpacity
   } from 'react-native';
+
+import { signupSchema } from '../Validation/signupValidation'
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Controller, useForm } from "react-hook-form";
+
+import TextAuthForm from '../components/TextAuthForm';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { authentication } from '../data/FirebaseConfig';
+import { addDoc, collection, doc } from "firebase/firestore";
+import { auth, db } from '../data/FirebaseConfig'
+
 
 const Register = ({navigation}) => {
-  const[email, setEmail] = useState("");
-  const[password, setPassword] = useState("");
+  const[isLoadingSignUp, setIsLoadingSignUp] = useState(false);
 
-  const registerUser =() => {
+/*   const registerUser =() => {
     if ( email === "") {
       alert("Please enter your email")
     }
@@ -34,7 +42,49 @@ const Register = ({navigation}) => {
         alert("Invalid email or password")
       })
     }
-  }
+  } */
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      username: "",
+      address: "",
+      phone: "",
+      email: "",
+      password: "",
+      passwordConfirmation: "",
+    },
+    mode: "onChange",
+    resolver: yupResolver(signupSchema),
+  });
+
+  const onSubmit = handleSubmit(
+    ({ email, password, address, phone, username }) => {
+      Keyboard.dismiss();
+      setIsLoadingSignUp(true);
+      createUserWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          const reference = collection(db, "UserInformation");
+
+          addDoc(reference, {
+            username,
+            address,
+            phone,
+            email,
+            uid: auth.currentUser.uid,
+          });
+          setIsLoadingSignUp(false);
+        })
+        .catch((error) => {
+          setIsLoadingSignUp(false);
+
+          console.log(error);
+        });
+    }
+  );
  
   const loginNavigation = () => {
     navigation.navigate("Login")
@@ -49,6 +99,7 @@ const Register = ({navigation}) => {
       <TouchableWithoutFeedback
       style = {styles.container}
       onPress = {Keyboard.dismiss}>
+      <ScrollView>
       <View style = {styles.logoContainer}>
       <View
       style = {styles.logoContainer}>
@@ -59,27 +110,138 @@ const Register = ({navigation}) => {
       <Text
       style = {styles.title}>Sign Up</Text>
       <View>
+      <Controller
+            name="username"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <TextAuthForm
+                style={{
+                  marginVertical: 10,
+                  borderRadius: 4,
+                  borderWidth: 1,
+                  paddingHorizontal: 12,
+                  borderColor: "#A5A5A5",
+                }}
+                placeholder="User name"
+                value={value}
+                onChangeText={onChange}
+                errorMessage={errors?.username?.message}
+              />
+            )}
+          />
 
-        <TextInput
-        style = {styles.input}
-        placeholder = {"Enter your email"}
-        value = {email}
-        onChangeText={(value) => setEmail(value)}
-        >
-        </TextInput>
-        <TextInput
-        style = {styles.input}
-        placeholder = {"Enter your password"}
-        value = {password}
-        onChangeText={(value) => setPassword(value)}
-        secureTextEntry = {true}>
-        </TextInput>
+          <Controller
+            name="email"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <TextAuthForm
+                style={{
+                  marginVertical: 10,
+                  borderRadius: 4,
+                  borderWidth: 1,
+                  paddingHorizontal: 12,
+                  borderColor: "#A5A5A5",
+                }}
+                keyboardType="email-address"
+                placeholder="Email"
+                value={value}
+                onChangeText={onChange}
+                errorMessage={errors?.email?.message}
+              />
+            )}
+          />
+
+          <Controller
+            name="phone"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <TextAuthForm
+                style={{
+                  marginVertical: 10,
+                  borderRadius: 4,
+                  borderWidth: 1,
+                  paddingHorizontal: 12,
+                  borderColor: "#A5A5A5",
+                }}
+                placeholder="Phone"
+                keyboardType="phone-pad"
+                value={value}
+                onChangeText={onChange}
+                errorMessage={errors?.phone?.message}
+              />
+            )}
+          />
+
+          <Controller
+            name="address"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <TextAuthForm
+                style={{
+                  marginVertical: 10,
+                  borderRadius: 4,
+                  borderWidth: 1,
+                  paddingHorizontal: 12,
+                  borderColor: "#A5A5A5",
+                }}
+                placeholder="Address"
+                value={value}
+                onChangeText={onChange}
+                errorMessage={errors?.address?.message}
+              />
+            )}
+          />
+
+          <Controller
+            name="password"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <TextAuthForm
+                style={{
+                  marginVertical: 10,
+                  borderRadius: 4,
+                  borderWidth: 1,
+                  paddingHorizontal: 12,
+                  borderColor: "#A5A5A5",
+                }}
+                issecure={true}
+                placeholder="Password"
+                value={value}
+                onChangeText={onChange}
+                errorMessage={errors?.password?.message}
+              />
+            )}
+          />
+
+          <Controller
+            name="passwordConfirmation"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <TextAuthForm
+                style={{
+                  marginVertical: 10,
+                  borderRadius: 4,
+                  borderWidth: 1,
+                  paddingHorizontal: 12,
+                  borderColor: "#A5A5A5",
+                }}
+                issecure={true}
+                placeholder="Password Confirmation"
+                value={value}
+                onChangeText={onChange}
+                onSubmitEditing={onSubmit}
+                errorMessage={errors?.passwordConfirmation?.message}
+              />
+            )}
+          />
+
         <TouchableOpacity
         style = {styles.buttonContainer}
-        onPress = {registerUser}
+        onPress={onSubmit}
+        isLoading={isLoadingSignUp}
+        disabled={isLoadingSignUp}
         >
-          <Text
-          style = {styles.buttonText}>Register</Text>
+          <Text style = {styles.buttonText}>Register</Text>
         </TouchableOpacity>
         <TouchableOpacity
         style = {{  
@@ -98,6 +260,7 @@ const Register = ({navigation}) => {
         </TouchableOpacity>
       </View>
       </View>
+      </ScrollView>
       </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -121,7 +284,7 @@ const styles = StyleSheet.create({
     color: "black",
     width: 350,
     height: 40,
-    margin: 12,
+    margin: 5,
     borderWidth: 1,
     padding: 10,
     borderRadius:5,

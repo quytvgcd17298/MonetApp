@@ -13,8 +13,8 @@ import RNPickerSelect, { defaultStyles } from "react-native-picker-select";
 import * as ImagePicker from "expo-image-picker";
 
 import DateTimePicker from '@react-native-community/datetimepicker'
-import  { auth, db } from '../data/FirebaseConfig'
-import { ref as DatabaseRef, push, set, onValue } from "firebase/database";
+import { auth, db } from '../data/FirebaseConfig'
+import uuid from "react-native-uuid";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import {
@@ -31,169 +31,136 @@ const dataREVENUE = [
   {
     label: 'FOOD',
     value: 'FOOD',
-    icon: () => <Ionicons name="fast-food" size={30} color="orange" />
 },
 {
     label: 'Breakfast',
     value: 'Breakfast',
-    icon: () => <MaterialIcons name="breakfast-dining" size={24} color="black" />
 },
 {
     label: 'Lunch',
     value: 'Lunch',
-    icon: () => <MaterialIcons name="lunch-dining" size={24} color="black" />
 },
 {
     label: 'Dinner',
     value: 'Dinner',
-    icon: () => <MaterialIcons name="dinner-dining" size={24} color="black" />
 },
 {
     label: 'Coffee',
     value: 'Coffee',
-    icon: () => <FontAwesome name="coffee" size={24} color="black" />
 },
 {
     label: 'Restaurant',
     value: 'Restaurant',
-    icon: () => <Ionicons name="restaurant" size={24} color="black" />
 },
 {
     label: 'LIVING SERVICE',
     value: 'LIVING SERVICE',
-    icon: () => <FontAwesome5 name="house-user" size={30} color="orange" />
 },
 {
     label: 'Electric',
     value: 'Electric',
-    icon: () => <MaterialCommunityIcons name="lightning-bolt" size={24} color="black" />
 },
 {
     label: 'Telephone charges',
     value: 'Telephone charges',
-    icon: () => <AntDesign name="mobile1" size={24} color="black" />
 },
 {
     label: 'Gas',
     value: 'Gas',
-    icon: () => <FontAwesome name="fire" size={24} color="black" />
 },
 {
     label: 'Water',
     value: 'Water',
-    icon: () => <Ionicons name="water" size={24} color="black" />
 },
 {
     label: 'Internet',
     value: 'Internet',
-    icon: () => <Fontisto name="world" size={24} color="black" />
 },
 {
     label: 'PERSONAL SERVICE',
     value: 'PERSONAL SERVICE',
-    icon: () => <Ionicons name="person" size={30} color="orange" />
 },
 {
     label: 'Clothes',
     value: 'Clothes',
-    icon: () => <MaterialCommunityIcons name="shoe-formal" size={24} color="black" />
 },
 {
     label: 'Accessory',
     value: 'Accessory',
-    icon: () => <Feather name="watch" size={24} color="black" />
 },
 {
     label: 'Girl friend',
     value: 'Girl friend',
-    icon: () => <Ionicons name="woman" size={24} color="black" />
 },
 {
     label: 'Party. Wedding, Birthday...',
     value: 'Party. Wedding, Birthday...',
-    icon: () => <FontAwesome5 name="gifts" size={24} color="black" />
 },
 {
     label: 'ENJOYMENT',
     value: 'ENJOYMENT',
-    icon: () => <FontAwesome5 name="plane-arrival" size={30} color="orange" />
 },
 {
     label: 'Shopping',
     value: 'Shoppuning',
-    icon: () => <FontAwesome name="shopping-cart" size={24} color="black" />
 },
 {
     label: "Entertainment",
     value: "Entertainment",
-    icon: () => <FontAwesome5 name="headphones" size={24} color="black" />
 },
 {
     label: "Travel",
     value: "Travel",
-    icon: () => <FontAwesome name="plane" size={24} color="black" />
 },
 {
     label: "Movie",
     value: "Movie",
-    icon: () => <MaterialIcons name="movie" size={24} color="black" />
 },
 {
     label: "Beautify",
     value: "Beautify",
-    icon: () => <MaterialCommunityIcons name="hair-dryer" size={24} color="black" />
 },
 {
     label: "MOVEMENT",
     value: "MOVEMENT",
-    icon: () => <Entypo name="location" size={30} color="orange" />
 },
 {
     label: "Gasoline",
     value: "Gasoline",
-    icon: () => <FontAwesome5 name="gas-pump" size={24} color="black" />
 },
 {
     label: "Taxi",
     value: "Taxi",
-    icon: () => <FontAwesome name="taxi" size={24} color="black" />
 },
 {
     label: "Car repair and maintain",
     value: "Car repair and maintain",
-    icon: () => <MaterialIcons name="car-repair" size={24} color="black" />
 },
 {
     label: "Other",
     value: "Other",
-    icon: () => <FontAwesome5 name="car-side" size={24} color="black" />
 },
 {
     label: "HEALTHY",
     value: "HEALTHY",
-    icon: () => <FontAwesome5 name="notes-medical" size={30} color="orange" />
 },
 {
     label: "Healthcare",
     value: "Healthcare",
-    icon: () => <FontAwesome5 name="hand-holding-medical" size={24} color="black" />
 },
 {
     label: "Medicine",
     value: "Medicine",
-    icon: () => <FontAwesome5 name="briefcase-medical" size={24} color="black" />
 },
 {
     label: "Sport",
     value: "Sport",
-    icon: () => <MaterialIcons name="sports-soccer" size={24} color="black" />
 },
 ];
 const dataEXPENDITURE = [
   { label: "Eating", value: "Eating" },
   { label: "living service", value: "Living" },
   { label: "Sports", value: "Sports" },
-
   { label: "Education", value: "Education" },
 ];
 
@@ -209,8 +176,7 @@ const CreateNew = ({navigation}) => {
   const [totalMoney, setTotalMoney] = useState(0);
 
   const [date, setDate] = useState(new Date());
-/*   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
- */
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
   const [textDate, setTextDate] = useState('Time is empty')
@@ -502,24 +468,27 @@ const CreateNew = ({navigation}) => {
           >
           <Ionicons  name="arrow-back-outline" size={30} color= "black"/>
           </TouchableOpacity>
+          <View
+          style={{
+            height:50,
+            width:150
+          }}>
           <RNPickerSelect
+          style={pickerSelectStyles}
           items={[
             { label: "REVENUE", value: "REVENUE" },
             { label: "EXPENDITURE", value: "EXPENDITURE" },
           ]}
           onValueChange={(value) => {
-            setCategory(value);
+            setCategory(value)
           }}
           itemKey={`key` + 1}
-/*           style={pickerSelectStyles}
- */       value={category}
-          useNativeAndroidPickerStyle={false}
+          value={category}
           key={`key`}
 
           Icon={() => (
             <View
               style={{
-                position: "absolute",
                 right: 10,
                 top: 10,
               }}
@@ -528,6 +497,7 @@ const CreateNew = ({navigation}) => {
             </View>
           )}>
           </RNPickerSelect>
+          </View>
           <TouchableOpacity onPress={()=>navigation.navigate("HistoryItem")}>
           <FontAwesome name="history" size={30} color="black" />          
           </TouchableOpacity>
@@ -612,18 +582,29 @@ const CreateNew = ({navigation}) => {
           style={{
             flexDirection:"row",
             justifyContent:"space-between",
-            alignItems:'center',
+            alignItems:'center'
           }}
           >
           <AntDesign name="questioncircle" size={24} color="black" />
+          <View
+          style={{
+            color: "black",
+            width: 350,
+            height: 40,
+            margin: 12,
+            borderBottomWidth: 1,
+          }}>
           <RNPickerSelect
           items={category === "REVENUE" ? dataREVENUE : dataEXPENDITURE}
-          onValueChange={(value) => {setGenre(value)}}
-          style={styles.dropdown}
+          onValueChange={(value) => {
+            setGenre(value);
+          }}
+          style={pickerSelectStyles}
           value={genre}
           useNativeAndroidPickerStyle={false}
           key={`key` + 2}
-          ></RNPickerSelect>
+        />
+          </View>
           </View>
           
           <View
@@ -685,12 +666,12 @@ const CreateNew = ({navigation}) => {
             >{textDate}</Text>
             </View>
 
-          {show &&(
+           {show &&(
             <DateTimePicker
             testID='dateTimePicker'
             value={date}
-/*             mode={date}
- */            is24Hour={true}
+            mode={date}
+            is24Hour={true}
             display='default'
             onChange={onChangeDate} 
             ></DateTimePicker>
@@ -783,8 +764,8 @@ const CreateNew = ({navigation}) => {
           {image ? (
           <Image
             source={{ uri: image }}
-/*             style={{ width: width - 32, height: width / 2 }}
- */          />
+            style={{ width:"100%", height:200 }}
+          />
         ) : null}
 
         <TouchableOpacity
@@ -826,7 +807,7 @@ const styles = StyleSheet.create({
 },
 
 dropdown: {
-  width:350,
+  borderWidth:1,
   backgroundColor:"gray",
   borderRadius: 5,
   marginVertical: 7,
@@ -843,5 +824,21 @@ dropdown: {
     borderRadius:5,   
   }
 })
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    fontSize: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    color: "black",
+    paddingRight: 30, // to ensure the text is never behind the icon
+  },
+  inputAndroid: {
+    fontSize: 16,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    color: "black",
+    paddingRight: 30, // to ensure the text is never behind the icon
+  },
+});
 
 export default CreateNew;

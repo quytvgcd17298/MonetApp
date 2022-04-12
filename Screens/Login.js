@@ -5,28 +5,35 @@ import {
    View, 
    Text, 
    StyleSheet, 
-   TextInput, 
+   TextInput,
+   ScrollView, 
    TouchableWithoutFeedback,
    KeyboardAvoidingView, 
    Keyboard, TouchableOpacity } from 'react-native';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { authentication } from '../data/FirebaseConfig';
+import { auth } from '../data/FirebaseConfig';
+import { Controller, useForm } from "react-hook-form";
+
+import { yupResolver } from "@hookform/resolvers/yup";
+import { loginSchema } from "../Validation/loginValidation";
+
+import TextAuthForm from '../components/TextAuthForm';
 
 import Icon from 'react-native-vector-icons/AntDesign'
 
 const Login = ({navigation}) => {
-  const[isSignedIn, setIsSignedIn] = useState(false);
-  const[email, setEmail] = useState("");
-  const[password, setPassword] = useState("");
+  const [isLoadingLogin, setIsLoadingLogin] = useState(false);
+/*   const[email, setEmail] = useState("");
+  const[password, setPassword] = useState(""); */
 
-  const loginHandlle =() => {
+  /* const loginHandlle =() => {
     if ( email === "") {
       alert("Please enter your email")
     }
     else if ( password === "") {
       alert("Please enter your password")
     } else {
-      signInWithEmailAndPassword(authentication, email, password)
+      signInWithEmailAndPassword(auth, email, password)
       .then((re) =>{
         setIsSignedIn(true);
         navigation.navigate("Monet");
@@ -36,7 +43,36 @@ const Login = ({navigation}) => {
         alert("Invalid email or password")
       })
     }
-  }
+  } */
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+    mode: "onChange",
+    resolver: yupResolver(loginSchema),
+  });
+  const onSubmit = handleSubmit(({ email, password }) => {
+    Keyboard.dismiss();
+    setIsLoadingLogin(true);
+    signInWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        setIsLoadingLogin(false);
+        setTimeout(() => {
+          navigation.navigate("Monet");
+        }, 500);
+      })
+      .catch((error) => {
+        setIsLoadingLogin(false);
+
+        console.log(error);
+      });
+  });
 
   const registerNavigation = () => {
     navigation.navigate("Register")
@@ -44,6 +80,7 @@ const Login = ({navigation}) => {
 
   return (
     <SafeAreaView style = {styles.container}>
+      <ScrollView>
       <KeyboardAvoidingView
       behavior='padding'
       style = {styles.keyContainer}
@@ -61,25 +98,54 @@ const Login = ({navigation}) => {
       <Text
       style = {styles.title}>Sign In</Text>
       <View>
-        <TextInput
-        style = {styles.input}
-        placeholder = {"Enter your email"}
-        placeholderTextColor = {"rgba(255,255,255,0.2)"}
-        value = {email}
-        onChangeText={(value) => setEmail(value)}
-        keyboardType="email-address"
-        returnKeyType='next'
-        autoCorrect={true}
-        >
-        </TextInput>
-        <TextInput
-        style = {styles.input}
-        placeholder = {"Enter your password"}
-        placeholderTextColor = {"rgba(255,255,255,0.2)"}
-        value = {password}
-        onChangeText={(value) => setPassword(value)}
-        secureTextEntry = {true}>
-        </TextInput>
+      <Controller
+            name="email"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <TextAuthForm
+                style={{
+                  textColor:'white',
+                  marginVertical: 10,
+                  borderRadius: 4,
+                  borderWidth: 1,
+                  paddingHorizontal: 12,
+                  borderColor: "#A5A5A5",
+                  backgroundColor: "rgba(255,255,255,0.2)",
+                }}
+                keyboardType="email-address"
+                placeholder="Email"
+                returnKeyType="next"
+                placeholderTextColor={"rgba(255,255,255,0.2)"}
+                onChangeText={onChange}
+                value={value}
+                errorMessage={errors?.email?.message}
+              />
+            )}
+          />
+          <Controller
+            name="password"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <TextAuthForm
+                style={{
+                  marginVertical: 10,
+                  borderRadius: 4,
+                  borderWidth: 1,
+                  paddingHorizontal: 12,
+                  borderColor: "#A5A5A5",
+                  backgroundColor: "rgba(255,255,255,0.2)",
+                }}
+                issecure
+                placeholder="Password"
+                returnKeyType="done"
+                placeholderTextColor={"rgba(255,255,255,0.2)"}
+                errorMessage={errors?.password?.message}
+                value={value}
+                onSubmitEditing={onSubmit}
+                onChangeText={onChange}
+              />
+            )}
+          />
         <TouchableOpacity
         style = {{  
           backgroundColor:'rgb(32,53,70)',
@@ -126,7 +192,9 @@ const Login = ({navigation}) => {
         </View>
         <TouchableOpacity
         style = {styles.buttonContainer}
-        onPress = {loginHandlle}
+        onPress={onSubmit}
+        isLoading={isLoadingLogin}
+        disabled={isLoadingLogin}
         >
           <Text
           style = {styles.buttonText}>Login</Text>
@@ -135,6 +203,7 @@ const Login = ({navigation}) => {
       </View>
       </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
+      </ScrollView>
     </SafeAreaView>
   )
 }
@@ -144,12 +213,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgb(32,53,70)',
     flexDirection:'column',
     alignContent:'center',
-    justifyContent:'center'
+    justifyContent:'center',
+
   },
   keyContainer: {
     flex: 1,
     backgroundColor: 'rgb(32,53,70)',
-    flexDirection:'column'
+    flexDirection:'column',
+
   },
   input:{
     backgroundColor: "rgba(255,255,255,0.2)",
