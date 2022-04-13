@@ -9,25 +9,19 @@ import { AntDesign } from '@expo/vector-icons';
 import { Fontisto } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 
-import RNPickerSelect, { defaultStyles } from "react-native-picker-select";
+import RNPickerSelect from "react-native-picker-select";
 import * as ImagePicker from "expo-image-picker";
 
-import DateTimePicker from '@react-native-community/datetimepicker'
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import moment from "moment";
+/* import DateTimePicker from '@react-native-community/datetimepicker' */
 import { auth, db } from '../data/FirebaseConfig'
 import uuid from "react-native-uuid";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-import {
-  getDoc,
-  doc,
-  collection,
-  getDocs,
-  documentId,
-  setDoc,
-  addDoc,
-} from "firebase/firestore";
+import { getDoc, doc, collection, getDocs, documentId, setDoc, addDoc } from "firebase/firestore";
 
-const dataREVENUE = [
+const dataEXPENDITURE = [
   {
     label: 'FOOD',
     value: 'FOOD',
@@ -157,11 +151,10 @@ const dataREVENUE = [
     value: "Sport",
 },
 ];
-const dataEXPENDITURE = [
-  { label: "Eating", value: "Eating" },
-  { label: "living service", value: "Living" },
-  { label: "Sports", value: "Sports" },
-  { label: "Education", value: "Education" },
+const dataREVENUE  = [
+  { label: "Monthly salary", value: "Salary" },
+  { label: "Bonus", value: "Bonus" },
+  { label: "Interest", value: "Interest" },
 ];
 
 const CreateNew = ({navigation}) => {
@@ -175,11 +168,11 @@ const CreateNew = ({navigation}) => {
 
   const [totalMoney, setTotalMoney] = useState(0);
 
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState("");
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [mode, setMode] = useState('date');
+/*   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
-  const [textDate, setTextDate] = useState('Time is empty')
+  const [textDate, setTextDate] = useState('Time is empty') */
 
 
   const [description, setDescription] = useState("");
@@ -204,12 +197,12 @@ const CreateNew = ({navigation}) => {
     console.log("Done")
   } */
 
-/*   const showDatePicker = () => {
-    setShow(true);
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
   };
 
   const hideDatePicker = () => {
-    setShow(false);
+    setDatePickerVisibility(false);
   };
 
   const handleConfirm = (date) => {
@@ -217,7 +210,7 @@ const CreateNew = ({navigation}) => {
     setDate(moment(date).format("DD/MM/YYYY"));
     hideDatePicker();
   };
- */
+
 
   const [image, setImage] = useState(null);
   const pickImage = async () => {
@@ -416,6 +409,16 @@ const CreateNew = ({navigation}) => {
     }
   }
 
+  const clearInput = () => {
+    setDate("");
+    setWho(""),
+    setEvent(""),
+    setLocation(""),
+    setDescription("");
+    setImage("");
+    setTotalMoney(0);
+  };
+
   useEffect(async () => {
     const querySnapshot = await getDocs(collection(db, "Information"));
     let data = [];
@@ -505,7 +508,7 @@ const CreateNew = ({navigation}) => {
       )
     } 
 
-    const onChangeDate = (event, selectedDate) => {
+    /* const onChangeDate = (event, selectedDate) => {
       const currentDate = selectedDate || date;
       setShow(Platform.OS === 'ios');
       setDate(currentDate);
@@ -521,7 +524,7 @@ const CreateNew = ({navigation}) => {
    const showModeDate = (currentMode) => {
      setShow(true);
      setMode(currentMode);
-   }
+   } */
 
 
   return (
@@ -616,66 +619,37 @@ const CreateNew = ({navigation}) => {
           >
           <MaterialIcons name="date-range" size={24} color="black" />
           <View>
-            <View
+          <DateTimePickerModal
+          isVisible={isDatePickerVisible}
+          mode="date"
+          onConfirm={handleConfirm}
+          onCancel={hideDatePicker}
+          date={new Date()}
+          />
+          <TouchableOpacity
+          onPress={() => showDatePicker()}
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            width:350,
+            height: 50,
+            borderBottomWidth: 1,
+            paddingHorizontal: 12,
+            margin: 12,
+            justifyContent: "space-between",
+          }}
+        >
+          <Text
             style={{
-              flexDirection:'row',
-              padding:12,
-              margin:5
+              flex: 1,
+              alignItems: "center",
+              textAlign: "center",
+              fontSize: 15,
             }}
-            >
-            <View>
-              <TouchableOpacity
-              style={{
-                width:170,
-                height:40,
-                borderBottomWidth:1,
-                justifyContent:'center',
-                alignItems:'center',
-              }}
-              onPress={()=> showModeDate('date')}
-              >
-                <Text
-                style = {{
-                  color:'#AFAFAF'}}
-                >Select Date</Text>
-              </TouchableOpacity>
-            </View>
-            <View>
-              <TouchableOpacity
-              style={{
-                width:170,
-                height:40,
-                borderBottomWidth:1,
-                justifyContent:'center',
-                alignItems:'center',
-              }}
-              onPress={()=> showModeDate('time')}
-              >
-                <Text
-                style = {{
-                  color:'#AFAFAF'
-                }}>Select Time</Text>
-              </TouchableOpacity>
-            </View>
-            </View>
-            <View style = {{ alignItems:'center', justifyContent:'center'}}>
-            <Text
-            style={{
-              paddingTop:20
-            }}
-            >{textDate}</Text>
-            </View>
-
-           {show &&(
-            <DateTimePicker
-            testID='dateTimePicker'
-            value={date}
-            mode={date}
-            is24Hour={true}
-            display='default'
-            onChange={onChangeDate} 
-            ></DateTimePicker>
-          )}
+          >
+            {date || "Choose Date"}
+          </Text>
+        </TouchableOpacity>
           </View>
           </View>
 
