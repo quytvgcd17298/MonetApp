@@ -272,7 +272,7 @@ const CreateNew = ({navigation}) => {
               description: description,
               create_date: date,
               event: event,
-              with: who,
+              withwho: who,
               location: location,
               imageUrl: imageUrl,
             },
@@ -323,7 +323,7 @@ const CreateNew = ({navigation}) => {
               description: description,
               create_date: date,
               event: event,
-              with: who,
+              withwho: who,
               location: location,
               imageUrl,
             },
@@ -378,7 +378,7 @@ const CreateNew = ({navigation}) => {
           description: description,
           create_date: date,
           event: event,
-          with: who,
+          withwho: who,
           location: location,
           imageUrl,
         };
@@ -804,14 +804,14 @@ const pickerSelectStyles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 10,
     color: "black",
-    paddingRight: 30, // to ensure the text is never behind the icon
+    paddingRight: 30, 
   },
   inputAndroid: {
     fontSize: 16,
     paddingHorizontal: 10,
     paddingVertical: 8,
     color: "black",
-    paddingRight: 30, // to ensure the text is never behind the icon
+    paddingRight: 30, 
   },
 });
 
