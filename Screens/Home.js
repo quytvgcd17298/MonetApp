@@ -620,36 +620,253 @@ const getCashOut = (data) => {
               padding: 12,
             }}
           >
-            {getCashOut(data).sumEducation ||
-            getCashOut(data).sumEating ||
-            getCashOut(data).sumLiving ||
-            getCashOut(data).sumSports ? (
+            {getCashOut(data).sumFOOD ||
+            getCashOut(data).sumBreakfast ||
+            getCashOut(data).sumLunch ||
+            getCashOut(data).sumDinner ||
+            getCashOut(data).sumCoffee ||
+            getCashOut(data).sumRestaurant ||
+            getCashOut(data).sumLIVINGSERVICE ||
+            getCashOut(data).sumElectric ||
+            getCashOut(data).sumTelephone ||
+            getCashOut(data).sumGas ||
+            getCashOut(data).sumWater ||
+            getCashOut(data).sumInternet ||
+            getCashOut(data).sumPERSONAL ||
+            getCashOut(data).sumClothes ||
+            getCashOut(data).sumAccessory ||
+            getCashOut(data).sumGirl ||
+            getCashOut(data).sumParty ||
+            getCashOut(data).sumENJOYMENT ||
+            getCashOut(data).sumShopping ||
+            getCashOut(data).sumEntertainment ||
+            getCashOut(data).sumTravel ||
+            getCashOut(data).sumMovie ||
+            getCashOut(data).sumBeautify ||
+            getCashOut(data).sumMOVEMENT ||
+            getCashOut(data).sumGasoline ||
+            getCashOut(data).sumTaxi ||
+            getCashOut(data).sumCarRepair ||
+            getCashOut(data).sumOther ||
+            getCashOut(data).sumHEALTHY ||
+            getCashOut(data).sumHealthcare ||
+            getCashOut(data).sumMedicine ||
+            getCashOut(data).sumSport ? (
               <PieChart
                 data={[
                   {
                     name: dataEXPENDITURE[0].label,
-                    population: getCashOut(data).sumEating,
+                    population: getCashOut(data).sumFOOD,
                     color: "rgba(131, 167, 234, 1)",
                     legendFontColor: "#7F7F7F",
                     legendFontSize: 12,
                   },
                   {
                     name: dataEXPENDITURE[1].label,
-                    population: getCashOut(data).sumLiving,
+                    population: getCashOut(data).sumBreakfast,
                     color: "yellow",
                     legendFontColor: "#7F7F7F",
                     legendFontSize: 12,
                   },
                   {
                     name: dataEXPENDITURE[2].label,
-                    population: getCashOut(data).sumSports,
+                    population: getCashOut(data).sumLunch,
                     color: "green",
                     legendFontColor: "#7F7F7F",
                     legendFontSize: 12,
                   },
                   {
                     name: dataEXPENDITURE[3].label,
-                    population: getCashOut(data).sumEducation,
+                    population: getCashOut(data).sumDinner,
+                    color: "rgb(0, 0, 255)",
+                    legendFontColor: "#7F7F7F",
+                    legendFontSize: 12,
+                  },
+                  {
+                    name: dataEXPENDITURE[4].label,
+                    population: getCashOut(data).sumCoffee,
+                    color: "rgb(0, 0, 255)",
+                    legendFontColor: "#7F7F7F",
+                    legendFontSize: 12,
+                  },
+                  {
+                    name: dataEXPENDITURE[5].label,
+                    population: getCashOut(data).sumRestaurant,
+                    color: "rgb(0, 0, 255)",
+                    legendFontColor: "#7F7F7F",
+                    legendFontSize: 12,
+                  },
+                  {
+                    name: dataEXPENDITURE[6].label,
+                    population: getCashOut(data).sumLIVINGSERVICE,
+                    color: "rgb(0, 0, 255)",
+                    legendFontColor: "#7F7F7F",
+                    legendFontSize: 12,
+                  },
+                  {
+                    name: dataEXPENDITURE[7].label,
+                    population: getCashOut(data).sumElectric,
+                    color: "rgb(0, 0, 255)",
+                    legendFontColor: "#7F7F7F",
+                    legendFontSize: 12,
+                  },
+                  {
+                    name: dataEXPENDITURE[8].label,
+                    population: getCashOut(data).sumTelephone,
+                    color: "rgb(0, 0, 255)",
+                    legendFontColor: "#7F7F7F",
+                    legendFontSize: 12,
+                  },
+                  {
+                    name: dataEXPENDITURE[9].label,
+                    population: getCashOut(data).sumGas,
+                    color: "rgb(0, 0, 255)",
+                    legendFontColor: "#7F7F7F",
+                    legendFontSize: 12,
+                  },
+                  {
+                    name: dataEXPENDITURE[10].label,
+                    population: getCashOut(data).sumWater,
+                    color: "rgb(0, 0, 255)",
+                    legendFontColor: "#7F7F7F",
+                    legendFontSize: 12,
+                  },
+                  {
+                    name: dataEXPENDITURE[11].label,
+                    population: getCashOut(data).sumInternet,
+                    color: "rgb(0, 0, 255)",
+                    legendFontColor: "#7F7F7F",
+                    legendFontSize: 12,
+                  },
+                  {
+                    name: dataEXPENDITURE[12].label,
+                    population: getCashOut(data).sumPERSONAL,
+                    color: "rgb(0, 0, 255)",
+                    legendFontColor: "#7F7F7F",
+                    legendFontSize: 12,
+                  },
+                  {
+                    name: dataEXPENDITURE[13].label,
+                    population: getCashOut(data).sumClothes,
+                    color: "rgb(0, 0, 255)",
+                    legendFontColor: "#7F7F7F",
+                    legendFontSize: 12,
+                  },
+                  {
+                    name: dataEXPENDITURE[14].label,
+                    population: getCashOut(data).sumAccessory,
+                    color: "rgb(0, 0, 255)",
+                    legendFontColor: "#7F7F7F",
+                    legendFontSize: 12,
+                  },
+                  {
+                    name: dataEXPENDITURE[15].label,
+                    population: getCashOut(data).sumGirl,
+                    color: "rgb(0, 0, 255)",
+                    legendFontColor: "#7F7F7F",
+                    legendFontSize: 12,
+                  },
+                  {
+                    name: dataEXPENDITURE[16].label,
+                    population: getCashOut(data).sumParty,
+                    color: "rgb(0, 0, 255)",
+                    legendFontColor: "#7F7F7F",
+                    legendFontSize: 12,
+                  },
+                  {
+                    name: dataEXPENDITURE[17].label,
+                    population: getCashOut(data).sumENJOYMENT,
+                    color: "rgb(0, 0, 255)",
+                    legendFontColor: "#7F7F7F",
+                    legendFontSize: 12,
+                  },
+                  {
+                    name: dataEXPENDITURE[18].label,
+                    population: getCashOut(data).sumShopping,
+                    color: "rgb(0, 0, 255)",
+                    legendFontColor: "#7F7F7F",
+                    legendFontSize: 12,
+                  },
+                  {
+                    name: dataEXPENDITURE[19].label,
+                    population: getCashOut(data).sumEntertainment,
+                    color: "rgb(0, 0, 255)",
+                    legendFontColor: "#7F7F7F",
+                    legendFontSize: 12,
+                  },
+                  {
+                    name: dataEXPENDITURE[20].label,
+                    population: getCashOut(data).sumTravel,
+                    color: "rgb(0, 0, 255)",
+                    legendFontColor: "#7F7F7F",
+                    legendFontSize: 12,
+                  },
+                  {
+                    name: dataEXPENDITURE[21].label,
+                    population: getCashOut(data).sumMovie,
+                    color: "rgb(0, 0, 255)",
+                    legendFontColor: "#7F7F7F",
+                    legendFontSize: 12,
+                  },
+                  {
+                    name: dataEXPENDITURE[22].label,
+                    population: getCashOut(data).sumBeautify,
+                    color: "rgb(0, 0, 255)",
+                    legendFontColor: "#7F7F7F",
+                    legendFontSize: 12,
+                  },
+                  {
+                    name: dataEXPENDITURE[23].label,
+                    population: getCashOut(data).sumMOVEMENT,
+                    color: "rgb(0, 0, 255)",
+                    legendFontColor: "#7F7F7F",
+                    legendFontSize: 12,
+                  },
+                  {
+                    name: dataEXPENDITURE[24].label,
+                    population: getCashOut(data).sumGas,
+                    color: "rgb(0, 0, 255)",
+                    legendFontColor: "#7F7F7F",
+                    legendFontSize: 12,
+                  },
+                  {
+                    name: dataEXPENDITURE[25].label,
+                    population: getCashOut(data).sumTaxi,
+                    color: "rgb(0, 0, 255)",
+                    legendFontColor: "#7F7F7F",
+                    legendFontSize: 12,
+                  },
+                  {
+                    name: dataEXPENDITURE[26].label,
+                    population: getCashOut(data).sumCarRepair,
+                    color: "rgb(0, 0, 255)",
+                    legendFontColor: "#7F7F7F",
+                    legendFontSize: 12,
+                  },
+                  {
+                    name: dataEXPENDITURE[27].label,
+                    population: getCashOut(data).sumHEALTHY,
+                    color: "rgb(0, 0, 255)",
+                    legendFontColor: "#7F7F7F",
+                    legendFontSize: 12,
+                  },
+                  {
+                    name: dataEXPENDITURE[28].label,
+                    population: getCashOut(data).sumHealthcare,
+                    color: "rgb(0, 0, 255)",
+                    legendFontColor: "#7F7F7F",
+                    legendFontSize: 12,
+                  },
+                  {
+                    name: dataEXPENDITURE[29].label,
+                    population: getCashOut(data).sumMedicine,
+                    color: "rgb(0, 0, 255)",
+                    legendFontColor: "#7F7F7F",
+                    legendFontSize: 12,
+                  },
+                  {
+                    name: dataEXPENDITURE[30].label,
+                    population: getCashOut(data).sumSport,
                     color: "rgb(0, 0, 255)",
                     legendFontColor: "#7F7F7F",
                     legendFontSize: 12,
