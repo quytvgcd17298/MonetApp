@@ -6,6 +6,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import RNPickerSelect from "react-native-picker-select";
 import moment from "moment";
 import Icons from "@expo/vector-icons/Ionicons";
+import { useIsFocused } from "@react-navigation/native";
 
 import { db, dbFireStore, auth  } from '../data/FirebaseConfig';
 import { collection, getDocs, deleteDoc, query, orderBy, doc, updateDoc } from "firebase/firestore"
@@ -21,7 +22,7 @@ export  const HistoryItem = ( {navigation} ) => {
   const [data, setData] = useState([]);
   const [sumRevenue, setSumRevenue] = useState(0);
   const [sumExpenditure, setSumExpenditure] = useState(0);
-  const dataCollectionRef = collection(db, "information");
+  const isFocused = useIsFocused();
 
 
 /*   const deleteItem = async (id) => {
@@ -44,28 +45,16 @@ export  const HistoryItem = ( {navigation} ) => {
     navigation.navigate("ItemInputDetail");
   }; */
 
-  const formatDate = (d) => {
-    var d = new Date();
-
-    var datestring =
-      d.getFullYear() +
-      "-" +
-      ("0" + (d.getMonth() + 1)).slice(-2) +
-      "-" +
-      ("0" + d.getDate()).slice(-2);
-
-    return datestring;
-  };
-
   useEffect(async () => {
     const querySnapshot = await getDocs(collection(db, "Information"));
     let data = [];
     querySnapshot.forEach((doc) => {
-      console.log(
-        "check",
-        moment().startOf("month").valueOf(),
-        new Date(formatDate(doc.data()?.create_date)).getTime()
-      );
+      var date = new Date(),
+        y = date.getFullYear(),
+        m = date.getMonth();
+      var firstDay = new Date(y, m, 1);
+      var lastDay = new Date(y, m + 1, 0);
+
       if (
         filter === dataFilter[0]?.value &&
         auth.currentUser.uid === doc.data()?.arrayHistory[0]?.uid &&
@@ -75,10 +64,13 @@ export  const HistoryItem = ( {navigation} ) => {
       } else if (
         filter === dataFilter[1]?.value &&
         auth.currentUser.uid === doc.data()?.arrayHistory[0]?.uid &&
-        moment().startOf("month").valueOf() <=
-          new Date(formatDate(doc.data()?.create_date)).getTime() &&
-        new Date(formatDate(doc.data()?.create_date)).getTime() <=
-          new Date(moment().endOf("month").format("YYYY-MM-DD")).getTime()
+        firstDay <=
+          moment(
+            moment(doc.data()?.create_date, "DD/MM/YYYY").format("YYYY-MM-DD")
+          ).valueOf() &&
+        moment(
+          moment(doc.data()?.create_date, "DD/MM/YYYY").format("YYYY-MM-DD")
+        ).valueOf() <= lastDay
       ) {
         data.push({ id: doc.id, ...doc.data() });
       } else {
@@ -98,11 +90,7 @@ export  const HistoryItem = ( {navigation} ) => {
     return () => {
       setData([]);
     };
-  }, [/* isFocused */, filter]);
-
-
-
-
+  }, [isFocused, filter]);
 
   const getSumRevenueAll = () => {
     let sum = 0;
@@ -133,7 +121,6 @@ export  const HistoryItem = ( {navigation} ) => {
     return sum;
   };
 
-  
   const _renderItem = ({ item, index }) => {
     const idHistory = item.id;
     const getREVENUE = () => {
@@ -146,7 +133,7 @@ export  const HistoryItem = ( {navigation} ) => {
         }
       });
       return sumRevenue;
-    }; 
+    };
 
     const getEXPENDITURE = () => {
       let sumEXPENDITURE = 0;

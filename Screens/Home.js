@@ -8,147 +8,55 @@ import {
   ContributionGraph,
   StackedBarChart
 } from "react-native-chart-kit";
+import { AntDesign } from '@expo/vector-icons'; 
 import { db, dbFireStore, auth } from '../data/FirebaseConfig';
 import { collection, getDocs, query, orderBy } from "firebase/firestore"
 import moment from "moment";
 import RNPickerSelect from "react-native-picker-select";
 import Icons from "@expo/vector-icons/Ionicons";
+import { useIsFocused } from "@react-navigation/native";
 
 const dataFilter = [
   { label: "To Day", value: "ToDay" },
   { label: "Month", value: "Month" },
   { label: "Year", value: "Year" },
 ];
-
 const dataEXPENDITURE = [
   {
     label: 'FOOD',
     value: 'FOOD',
 },
 {
-    label: 'Breakfast',
-    value: 'Breakfast',
-},
-{
-    label: 'Lunch',
-    value: 'Lunch',
-},
-{
-    label: 'Dinner',
-    value: 'Dinner',
-},
-{
-    label: 'Coffee',
-    value: 'Coffee',
-},
-{
-    label: 'Restaurant',
-    value: 'Restaurant',
-},
-{
     label: 'LIVING SERVICE',
     value: 'LIVING SERVICE',
 },
-{
-    label: 'Electric',
-    value: 'Electric',
-},
-{
-    label: 'Telephone charges',
-    value: 'Telephone charges',
-},
-{
-    label: 'Gas',
-    value: 'Gas',
-},
-{
-    label: 'Water',
-    value: 'Water',
-},
-{
-    label: 'Internet',
-    value: 'Internet',
-},
+
 {
     label: 'PERSONAL SERVICE',
     value: 'PERSONAL SERVICE',
 },
 {
-    label: 'Clothes',
-    value: 'Clothes',
-},
-{
-    label: 'Accessory',
-    value: 'Accessory',
-},
-{
-    label: 'Girl friend',
-    value: 'Girl friend',
-},
-{
-    label: 'Party. Wedding, Birthday...',
-    value: 'Party. Wedding, Birthday...',
-},
-{
     label: 'ENJOYMENT',
     value: 'ENJOYMENT',
 },
-{
-    label: 'Shopping',
-    value: 'Shoppuning',
-},
-{
-    label: "Entertainment",
-    value: "Entertainment",
-},
-{
-    label: "Travel",
-    value: "Travel",
-},
-{
-    label: "Movie",
-    value: "Movie",
-},
-{
-    label: "Beautify",
-    value: "Beautify",
-},
+
 {
     label: "MOVEMENT",
     value: "MOVEMENT",
 },
 {
-    label: "Gasoline",
-    value: "Gasoline",
-},
-{
-    label: "Taxi",
-    value: "Taxi",
-},
-{
-    label: "Car repair and maintain",
-    value: "Car repair and maintain",
-},
-{
-    label: "Other",
-    value: "Other",
+    label: "EDUCATION",
+    value: "EDUCATION",
 },
 {
     label: "HEALTHY",
     value: "HEALTHY",
 },
-{
-    label: "Healthcare",
-    value: "Healthcare",
-},
-{
-    label: "Medicine",
-    value: "Medicine",
-},
-{
-    label: "Sport",
-    value: "Sport",
-},
+];
+const dataREVENUE  = [
+  { label: "Monthly salary", value: "Salary" },
+  { label: "Bonus", value: "Bonus" },
+  { label: "Interest", value: "Interest" },
 ];
 const dataCategory = [
   { label: "REVENUE", value: "REVENUE" },
@@ -164,6 +72,7 @@ const Home = () => {
   const [dataCash, setDataCash] = useState([]);
 
   const [filter, setFilter] = useState(dataFilter[0].value);  
+  const isFocused = useIsFocused();
 
 /*   const docRef = doc(db, "informattion", "Amount");
   const docSnap = await getDocs(docRef);
@@ -213,7 +122,7 @@ useEffect(async () => {
   return () => {
     setData([]);
   };
-}, [/* isFocused */, filter]);
+}, [isFocused, filter]);
 
 useEffect(async () => {
   const querySnapshot = await getDocs(collection(db, "Information"));
@@ -228,7 +137,7 @@ useEffect(async () => {
   return () => {
     setDataCash([]);
   };
-}, [/* isFocused */, filter]);
+}, [isFocused, filter]);
 
 const getMoneyByMonth = (month) => {
   let sumCashMoney = 0;
@@ -264,37 +173,16 @@ const getCashOut = (data) => {
   let SumEXPENDITUREAll = 0;
   let SumRevenueAll = 0;
   let sumFOOD = 0;
-  let sumBreakfast = 0;
-  let sumLunch = 0;
-  let sumDinner = 0;
-  let sumCoffee = 0;
-  let sumRestaurant = 0;
   let sumLIVINGSERVICE = 0;
-  let sumElectric = 0;
-  let sumTelephone = 0;
-  let sumGas = 0;
-  let sumWater = 0;
-  let sumInternet = 0;
   let sumPERSONAL = 0;
-  let sumClothes = 0;
-  let sumAccessory = 0;
-  let sumGirl = 0;
-  let sumParty = 0;
   let sumENJOYMENT = 0;
-  let sumShopping = 0;
-  let sumEntertainment = 0;
-  let sumTravel = 0;
-  let sumMovie = 0;
-  let sumBeautify = 0;
   let sumMOVEMENT = 0;
-  let sumGasoline = 0;
-  let sumTaxi = 0;
-  let sumCarRepair = 0;
-  let sumOther = 0;
+  let sumEDUCATION = 0;
   let sumHEALTHY = 0;
-  let sumHealthcare = 0;
-  let sumMedicine = 0;
-  let sumSport = 0;
+  let sumSalary = 0;
+  let sumBonus = 0;
+  let sumInterest = 0;
+
   data.forEach((value) => {
     value.arrayHistory?.forEach((obj) => {
       for (let property in obj) {
@@ -303,104 +191,37 @@ const getCashOut = (data) => {
           if (obj["genre"] === dataEXPENDITURE[0].value) {
             sumFOOD += obj[property];
           } else if (obj["genre"] === dataEXPENDITURE[1].value) {
-            sumBreakfast += obj[property];
+            sumLIVINGSERVICE += obj[property];
           } 
           else if (obj["genre"] === dataEXPENDITURE[2].value) {
-            sumLunch += obj[property];
-          }
-          else if (obj["genre"] === dataEXPENDITURE[3].value) {
-            sumDinner += obj[property];
-          }
-          else if (obj["genre"] === dataEXPENDITURE[4].value) {
-            sumCoffee += obj[property];
-          }
-          else if (obj["genre"] === dataEXPENDITURE[5].value) {
-            sumRestaurant += obj[property];
-          }
-          else if (obj["genre"] === dataEXPENDITURE[6].value) {
-            sumLIVINGSERVICE += obj[property];
-          }
-          else if (obj["genre"] === dataEXPENDITURE[7].value) {
-            sumElectric += obj[property];
-          }
-          else if (obj["genre"] === dataEXPENDITURE[8].value) {
-            sumTelephone += obj[property];
-          }
-          else if (obj["genre"] === dataEXPENDITURE[9].value) {
-            sumGas += obj[property];
-          }
-          else if (obj["genre"] === dataEXPENDITURE[10].value) {
-            sumWater += obj[property];
-          }
-          else if (obj["genre"] === dataEXPENDITURE[11].value) {
-            sumInternet += obj[property];
-          }
-          else if (obj["genre"] === dataEXPENDITURE[12].value) {
             sumPERSONAL += obj[property];
           }
-          else if (obj["genre"] === dataEXPENDITURE[13].value) {
-            sumClothes += obj[property];
-          }
-          else if (obj["genre"] === dataEXPENDITURE[14].value) {
-            sumAccessory += obj[property];
-          }
-          else if (obj["genre"] === dataEXPENDITURE[15].value) {
-            sumGirl += obj[property];
-          }
-          else if (obj["genre"] === dataEXPENDITURE[16].value) {
-            sumParty += obj[property];
-          }
-          else if (obj["genre"] === dataEXPENDITURE[17].value) {
+          else if (obj["genre"] === dataEXPENDITURE[3].value) {
             sumENJOYMENT += obj[property];
           }
-          else if (obj["genre"] === dataEXPENDITURE[18].value) {
-            sumShopping += obj[property];
-          }
-          else if (obj["genre"] === dataEXPENDITURE[19].value) {
-            sumEntertainment += obj[property];
-          }
-          else if (obj["genre"] === dataEXPENDITURE[20].value) {
-            sumTravel += obj[property];
-          }
-          else if (obj["genre"] === dataEXPENDITURE[21].value) {
-            sumMovie += obj[property];
-          }
-          else if (obj["genre"] === dataEXPENDITURE[22].value) {
-            sumBeautify += obj[property];
-          }
-          else if (obj["genre"] === dataEXPENDITURE[23].value) {
+          else if (obj["genre"] === dataEXPENDITURE[4].value) {
             sumMOVEMENT += obj[property];
           }
-          else if (obj["genre"] === dataEXPENDITURE[24].value) {
-            sumGasoline += obj[property];
+          else if (obj["genre"] === dataEXPENDITURE[5].value) {
+            sumEDUCATION += obj[property];
           }
-          else if (obj["genre"] === dataEXPENDITURE[25].value) {
-            sumTaxi += obj[property];
-          }
-          else if (obj["genre"] === dataEXPENDITURE[26].value) {
-            sumCarRepair += obj[property];
-          }
-          else if (obj["genre"] === dataEXPENDITURE[27].value) {
-            sumOther += obj[property];
-          }
-          else if (obj["genre"] === dataEXPENDITURE[28].value) {
+          else if (obj["genre"] === dataEXPENDITURE[6].value) {
             sumHEALTHY += obj[property];
           }
-          else if (obj["genre"] === dataEXPENDITURE[29].value) {
-            sumHealthcare += obj[property];
-          }
-          else if (obj["genre"] === dataEXPENDITURE[30].value) {
-            sumMedicine += obj[property];
-          } else {
-            sumSport += obj[property];
-          }
-          
-        } else if (
-          property === "totalMoney" &&
-          obj["category"] === "REVENUE"
-        ) {
+        } 
+        if ( property === "totalMoney" && obj["category"] === "REVENUE") 
+        { 
           SumRevenueAll += obj[property];
+          if (obj["genre"] === dataREVENUE[0].value) {
+            sumSalary += obj[property];
+          } else if (obj["genre"] === dataREVENUE[1].value) {
+            sumBonus += obj[property];
+          } 
+          else if (obj["genre"] === dataREVENUE[2].value) {
+            sumInterest += obj[property];
+          }
         }
+        
       }
     });
   });
@@ -410,37 +231,15 @@ const getCashOut = (data) => {
    SumRevenueAll,
    SumEXPENDITUREAll,
    sumFOOD,
-   sumBreakfast,
-   sumLunch,
-   sumDinner,
-   sumCoffee,
-   sumRestaurant,
    sumLIVINGSERVICE,
-   sumElectric,
-   sumTelephone,
-   sumGas,
-   sumWater,
-   sumInternet,
    sumPERSONAL,
-   sumClothes,
-   sumAccessory,
-   sumGirl,
-   sumParty,
    sumENJOYMENT,
-   sumShopping,
-   sumEntertainment,
-   sumTravel,
-   sumMovie,
-   sumBeautify,
    sumMOVEMENT,
-   sumGasoline,
-   sumTaxi,
-   sumCarRepair,
-   sumOther,
+   sumEDUCATION,
    sumHEALTHY,
-   sumHealthcare,
-   sumMedicine,
-   sumSport,
+   sumSalary,
+   sumBonus,
+   sumInterest,
   };
 };
 
@@ -465,13 +264,23 @@ const getCashOut = (data) => {
         </View>
         <View
         style={styles.cashContainer}>
-          <Text
+         <View style={{flexDirection:'row', paddingHorizontal: 15 ,justifyContent:'space-between'}}>
+         <Text
           style={{
             fontWeight:"bold",
             fontSize:24,
             marginLeft:10,
             color:'white'
-          }}>CASH:                             ${getCashOut(dataCash).sumCash}</Text>
+          }}>CASH:</Text>
+          <Text
+           style={{
+            fontWeight:"bold",
+            fontSize:24,
+            marginLeft:10,
+            color:'white'
+          }}
+          >${getCashOut(dataCash).sumCash}</Text>
+         </View>
           <Text
           style={{
             marginTop:30,
@@ -548,16 +357,16 @@ const getCashOut = (data) => {
                   <Text>Expenditure</Text>
                 </View>
               </View>
-              <View style={{ width: "60%", alignItems: "flex-end" }}>
+              <View style={{ width: "60%", alignItems: "flex-end", paddingRight:5 }}>
                 <Text style={{ color: "green", fontSize: 15 }}>
-                  {getCashOut(data).SumRevenueAll}
+                  {getCashOut(data).SumRevenueAll} $
                 </Text>
                 <View style={{ height: 10 }} />
                 <Text style={{ color: "red", fontSize: 15 }}>
-                  {getCashOut(data).SumEXPENDITUREAll}
+                  {getCashOut(data).SumEXPENDITUREAll} $
                 </Text>
                 <View style={{ height: 10 }} />
-                <Text>{getCashOut(data).sumCash}</Text>
+                <Text>{getCashOut(data).sumCash} $</Text>
               </View>
             </View>
             {data ? (
@@ -605,11 +414,23 @@ const getCashOut = (data) => {
                 withInnerLines={false}
               />
             ) : null}
+          </View>
+            
+          <View
+          style={styles.spendContainer}
+          >
+             <Text
+            style={{
+              textAlign:'center',
+              fontWeight:'bold',
+              color:'white',
+              fontSize:30
+            }}
+            >Revenue Analysis</Text>
             <View
             style={{
-              backgroundColor: "white",
               borderRadius: 8,
-              shadowColor: "#000",
+              shadowColor: "#02F08C",
               shadowOffset: {
                 width: 0,
                 height: 2,
@@ -617,258 +438,33 @@ const getCashOut = (data) => {
               shadowOpacity: 0.25,
               shadowRadius: 3.84,
               elevation: 5,
-              padding: 12,
             }}
           >
-            {getCashOut(data).sumFOOD ||
-            getCashOut(data).sumBreakfast ||
-            getCashOut(data).sumLunch ||
-            getCashOut(data).sumDinner ||
-            getCashOut(data).sumCoffee ||
-            getCashOut(data).sumRestaurant ||
-            getCashOut(data).sumLIVINGSERVICE ||
-            getCashOut(data).sumElectric ||
-            getCashOut(data).sumTelephone ||
-            getCashOut(data).sumGas ||
-            getCashOut(data).sumWater ||
-            getCashOut(data).sumInternet ||
-            getCashOut(data).sumPERSONAL ||
-            getCashOut(data).sumClothes ||
-            getCashOut(data).sumAccessory ||
-            getCashOut(data).sumGirl ||
-            getCashOut(data).sumParty ||
-            getCashOut(data).sumENJOYMENT ||
-            getCashOut(data).sumShopping ||
-            getCashOut(data).sumEntertainment ||
-            getCashOut(data).sumTravel ||
-            getCashOut(data).sumMovie ||
-            getCashOut(data).sumBeautify ||
-            getCashOut(data).sumMOVEMENT ||
-            getCashOut(data).sumGasoline ||
-            getCashOut(data).sumTaxi ||
-            getCashOut(data).sumCarRepair ||
-            getCashOut(data).sumOther ||
-            getCashOut(data).sumHEALTHY ||
-            getCashOut(data).sumHealthcare ||
-            getCashOut(data).sumMedicine ||
-            getCashOut(data).sumSport ? (
+            {getCashOut(data).sumSalary ||
+            getCashOut(data).sumBonus ||
+            getCashOut(data).sumInterest ? (
+              <View>
               <PieChart
                 data={[
                   {
-                    name: dataEXPENDITURE[0].label,
-                    population: getCashOut(data).sumFOOD,
-                    color: "rgba(131, 167, 234, 1)",
-                    legendFontColor: "#7F7F7F",
+                    name: dataREVENUE[0].label,
+                    population: getCashOut(data).sumSalary,
+                    color: "lightgreen",
+                    legendFontColor: "white",
                     legendFontSize: 12,
                   },
                   {
-                    name: dataEXPENDITURE[1].label,
-                    population: getCashOut(data).sumBreakfast,
+                    name: dataREVENUE[1].label,
+                    population: getCashOut(data).sumBonus,
                     color: "yellow",
-                    legendFontColor: "#7F7F7F",
+                    legendFontColor: "white",
                     legendFontSize: 12,
                   },
                   {
-                    name: dataEXPENDITURE[2].label,
-                    population: getCashOut(data).sumLunch,
-                    color: "green",
-                    legendFontColor: "#7F7F7F",
-                    legendFontSize: 12,
-                  },
-                  {
-                    name: dataEXPENDITURE[3].label,
-                    population: getCashOut(data).sumDinner,
-                    color: "rgb(0, 0, 255)",
-                    legendFontColor: "#7F7F7F",
-                    legendFontSize: 12,
-                  },
-                  {
-                    name: dataEXPENDITURE[4].label,
-                    population: getCashOut(data).sumCoffee,
-                    color: "rgb(0, 0, 255)",
-                    legendFontColor: "#7F7F7F",
-                    legendFontSize: 12,
-                  },
-                  {
-                    name: dataEXPENDITURE[5].label,
-                    population: getCashOut(data).sumRestaurant,
-                    color: "rgb(0, 0, 255)",
-                    legendFontColor: "#7F7F7F",
-                    legendFontSize: 12,
-                  },
-                  {
-                    name: dataEXPENDITURE[6].label,
-                    population: getCashOut(data).sumLIVINGSERVICE,
-                    color: "rgb(0, 0, 255)",
-                    legendFontColor: "#7F7F7F",
-                    legendFontSize: 12,
-                  },
-                  {
-                    name: dataEXPENDITURE[7].label,
-                    population: getCashOut(data).sumElectric,
-                    color: "rgb(0, 0, 255)",
-                    legendFontColor: "#7F7F7F",
-                    legendFontSize: 12,
-                  },
-                  {
-                    name: dataEXPENDITURE[8].label,
-                    population: getCashOut(data).sumTelephone,
-                    color: "rgb(0, 0, 255)",
-                    legendFontColor: "#7F7F7F",
-                    legendFontSize: 12,
-                  },
-                  {
-                    name: dataEXPENDITURE[9].label,
-                    population: getCashOut(data).sumGas,
-                    color: "rgb(0, 0, 255)",
-                    legendFontColor: "#7F7F7F",
-                    legendFontSize: 12,
-                  },
-                  {
-                    name: dataEXPENDITURE[10].label,
-                    population: getCashOut(data).sumWater,
-                    color: "rgb(0, 0, 255)",
-                    legendFontColor: "#7F7F7F",
-                    legendFontSize: 12,
-                  },
-                  {
-                    name: dataEXPENDITURE[11].label,
-                    population: getCashOut(data).sumInternet,
-                    color: "rgb(0, 0, 255)",
-                    legendFontColor: "#7F7F7F",
-                    legendFontSize: 12,
-                  },
-                  {
-                    name: dataEXPENDITURE[12].label,
-                    population: getCashOut(data).sumPERSONAL,
-                    color: "rgb(0, 0, 255)",
-                    legendFontColor: "#7F7F7F",
-                    legendFontSize: 12,
-                  },
-                  {
-                    name: dataEXPENDITURE[13].label,
-                    population: getCashOut(data).sumClothes,
-                    color: "rgb(0, 0, 255)",
-                    legendFontColor: "#7F7F7F",
-                    legendFontSize: 12,
-                  },
-                  {
-                    name: dataEXPENDITURE[14].label,
-                    population: getCashOut(data).sumAccessory,
-                    color: "rgb(0, 0, 255)",
-                    legendFontColor: "#7F7F7F",
-                    legendFontSize: 12,
-                  },
-                  {
-                    name: dataEXPENDITURE[15].label,
-                    population: getCashOut(data).sumGirl,
-                    color: "rgb(0, 0, 255)",
-                    legendFontColor: "#7F7F7F",
-                    legendFontSize: 12,
-                  },
-                  {
-                    name: dataEXPENDITURE[16].label,
-                    population: getCashOut(data).sumParty,
-                    color: "rgb(0, 0, 255)",
-                    legendFontColor: "#7F7F7F",
-                    legendFontSize: 12,
-                  },
-                  {
-                    name: dataEXPENDITURE[17].label,
-                    population: getCashOut(data).sumENJOYMENT,
-                    color: "rgb(0, 0, 255)",
-                    legendFontColor: "#7F7F7F",
-                    legendFontSize: 12,
-                  },
-                  {
-                    name: dataEXPENDITURE[18].label,
-                    population: getCashOut(data).sumShopping,
-                    color: "rgb(0, 0, 255)",
-                    legendFontColor: "#7F7F7F",
-                    legendFontSize: 12,
-                  },
-                  {
-                    name: dataEXPENDITURE[19].label,
-                    population: getCashOut(data).sumEntertainment,
-                    color: "rgb(0, 0, 255)",
-                    legendFontColor: "#7F7F7F",
-                    legendFontSize: 12,
-                  },
-                  {
-                    name: dataEXPENDITURE[20].label,
-                    population: getCashOut(data).sumTravel,
-                    color: "rgb(0, 0, 255)",
-                    legendFontColor: "#7F7F7F",
-                    legendFontSize: 12,
-                  },
-                  {
-                    name: dataEXPENDITURE[21].label,
-                    population: getCashOut(data).sumMovie,
-                    color: "rgb(0, 0, 255)",
-                    legendFontColor: "#7F7F7F",
-                    legendFontSize: 12,
-                  },
-                  {
-                    name: dataEXPENDITURE[22].label,
-                    population: getCashOut(data).sumBeautify,
-                    color: "rgb(0, 0, 255)",
-                    legendFontColor: "#7F7F7F",
-                    legendFontSize: 12,
-                  },
-                  {
-                    name: dataEXPENDITURE[23].label,
-                    population: getCashOut(data).sumMOVEMENT,
-                    color: "rgb(0, 0, 255)",
-                    legendFontColor: "#7F7F7F",
-                    legendFontSize: 12,
-                  },
-                  {
-                    name: dataEXPENDITURE[24].label,
-                    population: getCashOut(data).sumGas,
-                    color: "rgb(0, 0, 255)",
-                    legendFontColor: "#7F7F7F",
-                    legendFontSize: 12,
-                  },
-                  {
-                    name: dataEXPENDITURE[25].label,
-                    population: getCashOut(data).sumTaxi,
-                    color: "rgb(0, 0, 255)",
-                    legendFontColor: "#7F7F7F",
-                    legendFontSize: 12,
-                  },
-                  {
-                    name: dataEXPENDITURE[26].label,
-                    population: getCashOut(data).sumCarRepair,
-                    color: "rgb(0, 0, 255)",
-                    legendFontColor: "#7F7F7F",
-                    legendFontSize: 12,
-                  },
-                  {
-                    name: dataEXPENDITURE[27].label,
-                    population: getCashOut(data).sumHEALTHY,
-                    color: "rgb(0, 0, 255)",
-                    legendFontColor: "#7F7F7F",
-                    legendFontSize: 12,
-                  },
-                  {
-                    name: dataEXPENDITURE[28].label,
-                    population: getCashOut(data).sumHealthcare,
-                    color: "rgb(0, 0, 255)",
-                    legendFontColor: "#7F7F7F",
-                    legendFontSize: 12,
-                  },
-                  {
-                    name: dataEXPENDITURE[29].label,
-                    population: getCashOut(data).sumMedicine,
-                    color: "rgb(0, 0, 255)",
-                    legendFontColor: "#7F7F7F",
-                    legendFontSize: 12,
-                  },
-                  {
-                    name: dataEXPENDITURE[30].label,
-                    population: getCashOut(data).sumSport,
-                    color: "rgb(0, 0, 255)",
-                    legendFontColor: "#7F7F7F",
+                    name: dataREVENUE[2].label,
+                    population: getCashOut(data).sumInterest,
+                    color: "blue",
+                    legendFontColor: "white",
                     legendFontSize: 12,
                   },
                 ]}
@@ -884,18 +480,25 @@ const getCashOut = (data) => {
                 paddingLeft={"15"}
                 // center={[10, 50]}
               />
+              <View style={{justifyContent:'flex-end', alignItems:'flex-end'}}>
+              <TouchableOpacity
+              style={{height:30, width:"30%"}}
+              >
+                <View style={{flexDirection:'row'}}>
+                <Text style={{fontStyle:'italic', fontWeight:'bold'}}>More Detail</Text>
+                <AntDesign name="caretright" size={24} color="black" />
+                </View>
+              </TouchableOpacity>
+              </View>
+              </View>
             ) : (
-              <View style ={{height:400, borderTopWidth:4 }}>
-              <Text style={{ textAlign: "center", fontSize:30, justifyContent:"center", alignItems:'center' }}>No data</Text>
+              <View style ={{height:250, borderTopWidth:4, justifyContent:"center", alignItems:'center' }}>
+              <Text style={{ textAlign: "center", fontSize:24, color:'white', fontStyle:'italic', textTransform:'uppercase', fontWeight:"bold"}}>No data</Text>
               </View>
             )}
           </View>
-          </View>
-            
-          <View
-          style={styles.spendContainer}
-          >
-             <Text
+
+          <Text
             style={{
               textAlign:'center',
               fontWeight:'bold',
@@ -903,53 +506,108 @@ const getCashOut = (data) => {
               fontSize:30
             }}
             >Spending Analysis</Text>
-            <View>
-        <Text>Bezier Line Chart</Text>
-        <LineChart
-          data={{
-            labels: ["January", "February", "March", "April", "May", "June"],
-            datasets: [
-              {
-                data: [
-                  Math.random() * 100,
-                  Math.random() * 100,
-                  Math.random() * 100,
-                  Math.random() * 100,
-                  Math.random() * 100,
-                  Math.random() * 100
-                ]
-              }
-            ]
-          }}
-          width={375} // from react-native
-          height={220}
-          yAxisLabel="$"
-          yAxisSuffix="k"
-          yAxisInterval={1} // optional, defaults to 1
-          chartConfig={{
-            backgroundColor: "#e26a00",
-            backgroundGradientFrom: "#fb8c00",
-            backgroundGradientTo: "#ffa726",
-            decimalPlaces: 2, // optional, defaults to 2dp
-            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            style: {
-              borderRadius: 16
-            },
-            propsForDots: {
-              r: "6",
-              strokeWidth: "2",
-              stroke: "#ffa726"
-            }
-          }}
-          bezier
-          style={{
-            marginVertical: 8,
-            borderRadius: 16,
-            alignItems:'center'
-          }}
-        />
-      </View>
+            <View
+            style={{
+              borderRadius: 8,
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 3.84,
+              elevation: 5,
+            }}
+          >
+            {getCashOut(data).sumFOOD ||
+            getCashOut(data).sumLIVINGSERVICE ||
+            getCashOut(data).sumPERSONAL ||
+            getCashOut(data).sumENJOYMENT ||
+            getCashOut(data).sumMOVEMENT ||
+            getCashOut(data).sumEDUCATION ||
+            getCashOut(data).sumHEALTHY ? (
+              <View>
+              <PieChart
+                data={[
+                  {
+                    name: dataEXPENDITURE[0].label,
+                    population: getCashOut(data).sumFOOD,
+                    color: "brown",
+                    legendFontColor: "white",
+                    legendFontSize: 12,
+                  },
+                  {
+                    name: dataEXPENDITURE[1].label,
+                    population: getCashOut(data).sumLIVINGSERVICE,
+                    color: "yellow",
+                    legendFontColor: "white",
+                    legendFontSize: 12,
+                  },
+                  {
+                    name: dataEXPENDITURE[2].label,
+                    population: getCashOut(data).sumPERSONAL,
+                    color: "#000000",
+                    legendFontColor: "white",
+                    legendFontSize: 12,
+                  },
+                  {
+                    name: dataEXPENDITURE[3].label,
+                    population: getCashOut(data).sumENJOYMENT,
+                    color: "#00FF00",
+                    legendFontColor: "white",
+                    legendFontSize: 12,
+                  },
+                  {
+                    name: dataEXPENDITURE[4].label,
+                    population: getCashOut(data).sumMOVEMENT,
+                    color: "gray",
+                    legendFontColor: "white",
+                    legendFontSize: 12,
+                  },
+                  {
+                    name: dataEXPENDITURE[5].label,
+                    population: getCashOut(data).sumEDUCATION,
+                    color: "#FF66FF",
+                    legendFontColor: "white",
+                    legendFontSize: 12,
+                  },
+                  {
+                    name: dataEXPENDITURE[6].label,
+                    population: getCashOut(data).sumHEALTHY,
+                    color: "#3366CC",
+                    legendFontColor: "white",
+                    legendFontSize: 12,
+                  },
+                ]}
+                width={Dimensions.get("window").width - 32}
+                height={220}
+                chartConfig={{
+                  backgroundGradientFrom: "#fb8c00",
+                  backgroundGradientTo: "#fb8c00",
+                  color: (opacity = 255) => `black`,
+                }}
+                accessor={"population"}
+                backgroundColor={"transparent"}
+                paddingLeft={"15"}
+                // center={[10, 50]}
+              />
+              <View style={{justifyContent:'flex-end', alignItems:'flex-end'}}>
+              <TouchableOpacity
+              style={{height:30, width:"30%"}}
+              >
+                <View style={{flexDirection:'row'}}>
+                <Text style={{fontStyle:'italic', fontWeight:'bold'}}>More Detail</Text>
+                <AntDesign name="caretright" size={24} color="black" />
+                </View>
+              </TouchableOpacity>
+              </View>
+              </View>
+            ) : (
+              <View style ={{height:250, borderTopWidth:4, justifyContent:"center", alignItems:'center' }}>
+              <Text style={{ textAlign: "center", fontSize:24, color:'white', fontStyle:'italic', textTransform:'uppercase', fontWeight:"bold"}}>No data created</Text>
+              </View>
+            )}
+          </View>
           </View>
 
       </ScrollView>
@@ -972,17 +630,18 @@ const styles = StyleSheet.create({
     },
   analysContainer:{
     backgroundColor:'#F59A32',
-    height:1000,
+    height:550,
     marginHorizontal:15,
     marginTop:10,
     borderRadius:10,
   },
   spendContainer:{
     backgroundColor:'#D9001B',
-    height:500,
+    height:620,
     marginHorizontal:15,
     marginTop:10,
-    borderRadius:10
+    borderRadius:10,
+    paddingVertical:12
   }
 });
 const pickerSelectStyles = StyleSheet.create({

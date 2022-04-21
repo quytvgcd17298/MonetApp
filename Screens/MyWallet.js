@@ -1,96 +1,136 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput, ScrollView, StyleSheet, KeyboardAvoidingView } from 'react-native'
-import { Ionicons  } from '@expo/vector-icons';
-import { MaterialIcons } from '@expo/vector-icons'; 
-import { Entypo } from '@expo/vector-icons'; 
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import { useIsFocused } from "@react-navigation/native";
+import { db, auth } from '../data/FirebaseConfig';
+import Icons from "@expo/vector-icons/Ionicons";
 
-const MyWallet = () => {
+const { width } = Dimensions.get("window");
 
+const MyWallet = ({navigation}) => {
+  const [dataCash, setDataCash] = useState([]);
+  const isFocused = useIsFocused();
 
-  function renderNavBar() {
-    return(
-      <View
-        style={{
-          flexDirection:"row",
-          height:60,
-          justifyContent:"space-between",
-          alignItems:'flex-end',
-          paddingHorizontal:15,
-          backgroundColor:'#02F08C'
-        }}
-      >
-        <TouchableOpacity>
-        <Ionicons  name="arrow-back-outline" size={30} color= "black"/>
-        </TouchableOpacity>
-        <Text
-        style={{
-          fontSize:26,
-          marginBottom:5,
-          textTransform:"uppercase",
-          fontWeight:'bold'
-        }}
-        >My Wallet</Text>
-        <TouchableOpacity>
-        <MaterialIcons name="date-range" size={30} color="black" />
-        </TouchableOpacity>
-      </View>
-    )
-  } 
+  useEffect(async () => {
+    const querySnapshot = await getDocs(collection(db, "Information"));
+    let data = [];
+    querySnapshot.forEach((doc) => {
+      if (auth.currentUser.uid === doc.data()?.arrayHistory[0]?.uid) {
+        data.push({ id: doc.id, ...doc.data() });
+      }
+    });
+    setDataCash(data);
 
+    return () => {
+      setDataCash([]);
+    };
+  }, [isFocused]);
+  const getCashOut = (data) => {
+    let sumCash = 0;
+    let SumEXPENDITUREAll = 0;
+
+    let SumRevenueAll = 0;
+    data.forEach((value) => {
+      value.arrayHistory?.forEach((obj) => {
+        for (let property in obj) {
+          if (property === "totalMoney" && obj["category"] !== "REVENUE") {
+            SumEXPENDITUREAll += obj[property];
+          } else if (
+            property === "totalMoney" &&
+            obj["category"] === "REVENUE"
+          ) {
+            SumRevenueAll += obj[property];
+          }
+        }
+      });
+    });
+    sumCash = SumRevenueAll - SumEXPENDITUREAll;
+    return {
+      sumCash,
+    };
+  };
   return (
-    <View>
-        {renderNavBar()}
-        <View
-        style={styles.stl}>
-          <Text
-          style={{
-            fontSize:18
-          }}
-          >Total money in wallet:</Text>
-          <Text>80.00$</Text>
-        </View>
-        <View
-        style={styles.stlA}
+    <View style={[styles.container, { paddingTop: 20 }]}>
+      <View
+        style={[styles.headerContainer, { backgroundColor: "#02F08C"}]}
         >
-          <Entypo name="wallet" size={40} color="black" style={{
-            marginVertical:15,
-            paddingLeft:30
-          }} />
-          <Text
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Icons name="arrow-back" size={24} color={"black"} />
+        </TouchableOpacity>
+        <Text style={styles.title}>WALLET BALANCE</Text>
+      </View>
+      <View style={{ paddingHorizontal: 16, paddingTop: 10 }}>
+        <View
           style={{
-            fontSize:26,
-            fontStyle:'italic',
-            fontWeight:'bold',
-            marginLeft:20,
-            marginTop:20
+            height: width / 3,
+            width: "100%",
+            backgroundColor: "#9AF9D1",
+            borderRadius: 10,
+            padding: 12,
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 3.84,
+
+            elevation: 5,
           }}
-          >Cash Wallet</Text>
+        >
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
+            <Text style={{ fontSize: 25, color: "black", fontWeight: "bold" }}>
+              CASH
+            </Text>
+            <Text
+              style={{
+                fontSize: 25,
+                color: "black",
+                fontWeight: "bold",
+                maxWidth: width * 0.5,
+              }}
+            >
+              ${getCashOut(dataCash).sumCash}
+            </Text>
+          </View>
           <Text
-          style={{
-            fontSize:30,
-            marginTop:70,
-            marginLeft:40
-          }}
-          >80.00$</Text>
+            style={{
+              position: "absolute",
+              bottom: 12,
+              left: 12,
+              fontSize: 20,
+              color: "black",
+            }}
+          >
+            My cash on hand
+          </Text>
         </View>
+      </View>
     </View>
-  )
-}
+  );
+};
+
+export default MyWallet;
 
 const styles = StyleSheet.create({
-  stl:{
-    justifyContent:'center',
-    alignItems:'center',
-    backgroundColor:"#D7D7D7",
-    height:60
+  container: {
+    flex: 1,
+    backgroundColor: "white",
   },
-  stlA:{
-    flexDirection:'row',
-    justifyContent:"flex-start",
-    alignItems:'flex-start',
-    backgroundColor:'#9AF9D1',
-    marginTop:30,
-    height:150
-  }
-})
-export default MyWallet;
+  headerContainer: {
+    paddingHorizontal: 12,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingVertical: 16,
+  },
+  title: {
+    flex: 1,
+    textAlign: "center",
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "black",
+  },
+});

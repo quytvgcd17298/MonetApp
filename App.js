@@ -20,6 +20,7 @@ import { Entypo } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons'; 
 import { Feather } from '@expo/vector-icons'; 
 
+import  EditProfileScreen from "./Screens/EditProfileScreen"
 import { HistoryItem } from "./Screens/HistoryItem";
 import  DetailItem  from "./Screens/DetailItem";
 
@@ -54,6 +55,10 @@ export default function App() {
       headerShown:false }}>
       </Stack.Screen>
       <Stack.Screen name = "DetailItem" component={DetailItem}
+      options = {{
+      headerShown:false }}>
+      </Stack.Screen>
+      <Stack.Screen name = "EditProfileScreen" component={EditProfileScreen}
       options = {{
       headerShown:false }}>
       </Stack.Screen>

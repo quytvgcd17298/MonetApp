@@ -10,6 +10,8 @@ import RNPickerSelect from "react-native-picker-select";
 import CurrencyInput from "react-native-currency-input";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import * as ImagePicker from "expo-image-picker";
+import { useIsFocused } from "@react-navigation/native";
+
 import {
     collection,
     deleteDoc,
@@ -31,128 +33,30 @@ import {
       value: 'FOOD',
   },
   {
-      label: 'Breakfast',
-      value: 'Breakfast',
-  },
-  {
-      label: 'Lunch',
-      value: 'Lunch',
-  },
-  {
-      label: 'Dinner',
-      value: 'Dinner',
-  },
-  {
-      label: 'Coffee',
-      value: 'Coffee',
-  },
-  {
-      label: 'Restaurant',
-      value: 'Restaurant',
-  },
-  {
       label: 'LIVING SERVICE',
       value: 'LIVING SERVICE',
   },
-  {
-      label: 'Electric',
-      value: 'Electric',
-  },
-  {
-      label: 'Telephone charges',
-      value: 'Telephone charges',
-  },
-  {
-      label: 'Gas',
-      value: 'Gas',
-  },
-  {
-      label: 'Water',
-      value: 'Water',
-  },
-  {
-      label: 'Internet',
-      value: 'Internet',
-  },
+  
   {
       label: 'PERSONAL SERVICE',
       value: 'PERSONAL SERVICE',
   },
   {
-      label: 'Clothes',
-      value: 'Clothes',
-  },
-  {
-      label: 'Accessory',
-      value: 'Accessory',
-  },
-  {
-      label: 'Girl friend',
-      value: 'Girl friend',
-  },
-  {
-      label: 'Party. Wedding, Birthday...',
-      value: 'Party. Wedding, Birthday...',
-  },
-  {
       label: 'ENJOYMENT',
       value: 'ENJOYMENT',
   },
-  {
-      label: 'Shopping',
-      value: 'Shoppuning',
-  },
-  {
-      label: "Entertainment",
-      value: "Entertainment",
-  },
-  {
-      label: "Travel",
-      value: "Travel",
-  },
-  {
-      label: "Movie",
-      value: "Movie",
-  },
-  {
-      label: "Beautify",
-      value: "Beautify",
-  },
+  
   {
       label: "MOVEMENT",
       value: "MOVEMENT",
   },
   {
-      label: "Gasoline",
-      value: "Gasoline",
-  },
-  {
-      label: "Taxi",
-      value: "Taxi",
-  },
-  {
-      label: "Car repair and maintain",
-      value: "Car repair and maintain",
-  },
-  {
-      label: "Other",
-      value: "Other",
+      label: "EDUCATION",
+      value: "EDUCATION",
   },
   {
       label: "HEALTHY",
       value: "HEALTHY",
-  },
-  {
-      label: "Healthcare",
-      value: "Healthcare",
-  },
-  {
-      label: "Medicine",
-      value: "Medicine",
-  },
-  {
-      label: "Sport",
-      value: "Sport",
   },
   ];
   const dataREVENUE  = [
@@ -162,224 +66,230 @@ import {
   ];
 const DetailItem = ({ route , navigation }) => {
 
-    const { history, idHistory } = route.params || {};
-    const [category, setCategory] = useState(history?.category);
-    const [genre, setGenre] = useState(history?.genre);
-    const [isLoadingImage, setIsLoadingImage] = useState(false);
-    const [isLoadingSave, setIsLoadingSave] = useState(false);
-    const [description, setDescription] = useState(history?.description);
-    const [totalMoney, setTotalMoney] = useState(history?.totalMoney);
-    const [event, setEvent]= useState(history?.event);
-    const [who, setWho]= useState(history?.withwho);
-    const [location, setLocation]= useState(history?.location);
-    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-    const [date, setDate] = useState(history?.create_date);
-    const [data, setData] = useState([]);
-    const [image, setImage] = useState(history?.imageUrl);
-  
-    useEffect(async () => {
-        const querySnapshot = await getDocs(collection(db, "Information"));
-        let data = [];
-        querySnapshot.forEach((doc) => {
-          data.push({ id: doc.id, ...doc.data() });
-        });
-        setData(data);
-        return () => {
-          setData([]);
+  const { history, idHistory } = route.params || {};
+  const [category, setCategory] = useState(history?.category);
+  const [genre, setGenre] = useState(history?.genre);
+  const [isLoadingImage, setIsLoadingImage] = useState(false);
+  const [isLoadingSave, setIsLoadingSave] = useState(false);
+  const [description, setDescription] = useState(history?.description);
+  const [totalMoney, setTotalMoney] = useState(history?.totalMoney);
+  const [event, setEvent]= useState(history?.event);
+  const [who, setWho]= useState(history?.withwho);
+  const [location, setLocation]= useState(history?.location);
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [date, setDate] = useState(history?.create_date);
+  const [data, setData] = useState([]);
+  const [image, setImage] = useState(history?.imageUrl);
+
+  const isFocused = useIsFocused();
+
+  useEffect(async () => {
+    const querySnapshot = await getDocs(collection(db, "Information"));
+    let data = [];
+    querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      data.push({ id: doc.id, ...doc.data() });
+    });
+    setData(data);
+    return () => {
+      setData([]);
+    };
+  }, [isFocused]);
+
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = (date) => {
+    console.log("A date has been picked: ", date);
+    setDate(moment(date).format("DD/MM/YYYY"));
+    hideDatePicker();
+  };
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      setImage(`${result.uri}`);
+    }
+  };
+  async function uploadImageAsync(uri) {
+    // Why are we using XMLHttpRequest? See:
+    // https://github.com/expo/expo/issues/2402#issuecomment-443726662
+    if (!image.includes("firebasestorage")) {
+      const blob = await new Promise((resolve, reject) => {
+        setIsLoadingImage(true);
+
+        const xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+          resolve(xhr.response);
         };
-      }, []);
-      
-      const showDatePicker = () => {
-        setDatePickerVisibility(true);
-      };
-    
-      const hideDatePicker = () => {
-        setDatePickerVisibility(false);
-      };
-    
-      const handleConfirm = (date) => {
-        console.log("A date has been picked: ", date);
-        setDate(moment(date).format("DD/MM/YYYY"));
-        hideDatePicker();
-      };
-      const pickImage = async () => {
-        // No permissions request is necessary for launching the image library
-        let result = await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.All,
-          allowsEditing: true,
-          aspect: [4, 3],
-          quality: 1,
+        xhr.onerror = function (e) {
+          console.log(e);
+          reject(new TypeError("Network request failed"));
+        };
+        xhr.responseType = "blob";
+        xhr.open("GET", uri, true);
+        xhr.send(null);
+      });
+
+      const fileRef = ref(getStorage(), uuid.v4());
+      const result = await uploadBytes(fileRef, blob);
+      blob.close();
+      setIsLoadingImage(false);
+
+      const imageUrl = await getDownloadURL(fileRef);
+
+      if (data && imageUrl) {
+        setIsLoadingSave(true);
+        const dataArrayHistory = data?.filter((v) => v.id === idHistory)[0]
+          ?.arrayHistory;
+        const newData = dataArrayHistory.map((v) => {
+          if (v.id === history?.id) {
+            return {
+              ...v,
+              category,
+              description,
+              genre,
+              event,
+              totalMoney,
+              location,
+              withwho,
+              create_date: date,
+              imageUrl,
+            };
+          }
+          return v;
         });
-    
-        console.log(result);
-    
-        if (!result.cancelled) {
-          setImage(`${result.uri}`);
-        }
-      };
-      async function uploadImageAsync(uri) {
-        // Why are we using XMLHttpRequest? See:
-        // https://github.com/expo/expo/issues/2402#issuecomment-443726662
-        if (!image.includes("firebasestorage")) {
-          const blob = await new Promise((resolve, reject) => {
-            setIsLoadingImage(true);
-    
-            const xhr = new XMLHttpRequest();
-            xhr.onload = function () {
-              resolve(xhr.response);
-            };
-            xhr.onerror = function (e) {
-              console.log(e);
-              reject(new TypeError("Network request failed"));
-            };
-            xhr.responseType = "blob";
-            xhr.open("GET", uri, true);
-            xhr.send(null);
-          });
-    
-          const fileRef = ref(getStorage(), uuid.v4());
-          const result = await uploadBytes(fileRef, blob);
-          blob.close();
-          setIsLoadingImage(false);
-    
-          const imageUrl = await getDownloadURL(fileRef);
-    
-          if (data && imageUrl) {
-            setIsLoadingSave(true);
-            const dataArrayHistory = data?.filter((v) => v.id === idHistory)[0]
-              ?.arrayHistory;
-            const newData = dataArrayHistory.map((v) => {
-              if (v.id === history?.id) {
-                return {
-                  ...v,
-                  category,
-                  description,
-                  genre,
-                  totalMoney,
-                  event,
-                  location,
-                  withwho,
-                  create_date: date,
-                  imageUrl,
-                };
-              }
-              return v;
-            });
-            const reference = doc(db, "Information", idHistory);
-            setDoc(reference, {
-              arrayHistory: newData,
-              create_date: data?.filter((v) => v.id === idHistory)[0]?.create_date,
-            })
-              .then(() => {
-                setIsLoadingSave(false);
-                navigation.navigate("HistoryItem");
-              })
-              .catch((error) => {
-                setIsLoadingSave(false);
-                console.error(error);
-                Alert.alert("Error", "Error", [
-                  {
-                    text: "OK",
-                    onPress: () => console.log("Cancel Pressed"),
-                    style: "cancel",
-                  },
-                ]);
-              });
-          }
-        } else {
-          if (data) {
-            setIsLoadingSave(true);
-            const dataArrayHistory = data?. filter((v) => v.id === idHistory)[0]
-              ?.arrayHistory;
-            const newData = dataArrayHistory.map((v) => {
-              if (v.id === history?.id) {
-                return {
-                  ...v,
-                  category,
-                  description,
-                  genre,
-                  event,
-                  location,
-                  withwho,
-                  totalMoney,
-                  create_date: date,
-                };
-              }
-              return v;
-            });
-            const reference = doc(db, "Information", idHistory);
-            setDoc(reference, {
-              arrayHistory: newData,
-              create_date: data?.filter((v) => v.id === idHistory)[0]?.create_date,
-            })
-              .then(() => {
-                setIsLoadingSave(false);
-                navigation.navigate("HistoryItem");
-              })
-              .catch((error) => {
-                setIsLoadingSave(false);
-                console.error(error);
-                Alert.alert("Error", "Error", [
-                  {
-                    text: "OK",
-                    onPress: () => console.log("Cancel Pressed"),
-                    style: "cancel",
-                  },
-                ]);
-              });
-          }
-        }
-      }
-      const onPressSave = () => {
-        if (description && totalMoney !== 0 && image && date) {
-          uploadImageAsync(image);
-        } else {
-        }
-      };
-      const onPressDelete = () => {
-        if (data && data.length > 0) {
-          const dataArrayHistory = data?.filter((v) => v.id === idHistory)[0]
-            ?.arrayHistory;
-          const newData = dataArrayHistory?.filter((v) => v.id !== history?.id);
-          const reference = doc(db, "Information", idHistory);
-          setDoc(reference, {
-            arrayHistory: newData,
-            create_date: data?.filter((v) => v.id === idHistory)[0]?.create_date,
+        const reference = doc(db, "Information", idHistory);
+        setDoc(reference, {
+          arrayHistory: newData,
+          create_date: data?.filter((v) => v.id === idHistory)[0]?.create_date,
+        })
+          .then(() => {
+            setIsLoadingSave(false);
+            navigation.navigate("HistoryItem");
           })
-            .then(() => {
-              setIsLoadingSave(false);
-              navigation.navigate("HistoryItem");
-            })
-            .catch((error) => {
-              setIsLoadingSave(false);
-              console.error(error);
-              Alert.alert("Error", "Error", [
-                {
-                  text: "OK",
-                  onPress: () => console.log("Cancel Pressed"),
-                  style: "cancel",
-                },
-              ]);
-            });
-          return;
-        }
-    
-        if (data && data.length === 0) {
-          const reference = collection(db, "Information", idHistory);
-          deleteDoc(reference)
-            // Handling Promises
-            .then(async () => {
-              navigation.navigate("HistoryItem");
-    
-              // MARK: Success
-            })
-            .catch((error) => {
-              // MARK: Failure
-              console.log(error.message);
-            });
-        }
-      };
-      console.log({idHistory});
+          .catch((error) => {
+            setIsLoadingSave(false);
+            console.error(error);
+            Alert.alert("Error", "Error", [
+              {
+                text: "OK",
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel",
+              },
+            ]);
+          });
+      }
+    } else {
+      if (data) {
+        setIsLoadingSave(true);
+        const dataArrayHistory = data?.filter((v) => v.id === idHistory)[0]
+          ?.arrayHistory;
+        const newData = dataArrayHistory.map((v) => {
+          if (v.id === history?.id) {
+            return {
+              ...v,
+              category,
+              description,
+              genre,
+              totalMoney,
+              event,
+              totalMoney,
+              location,
+              withwho,
+              create_date: date,
+            };
+          }
+          return v;
+        });
+        const reference = doc(db, "Information", idHistory);
+        setDoc(reference, {
+          arrayHistory: newData,
+          create_date: data?.filter((v) => v.id === idHistory)[0]?.create_date,
+        })
+          .then(() => {
+            setIsLoadingSave(false);
+            navigation.navigate("HistoryItem");
+          })
+          .catch((error) => {
+            setIsLoadingSave(false);
+            console.error(error);
+            Alert.alert("Error", "Error", [
+              {
+                text: "OK",
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel",
+              },
+            ]);
+          });
+      }
+    }
+
+    // We're done with the blob, close and release it
+  }
+  const onPressSave = () => {
+    if (description && totalMoney !== 0 && image && date) {
+      uploadImageAsync(image);
+    } else {
+    }
+  };
+  const onPressDelete = () => {
+    if (data && data.length > 0) {
+      const dataArrayHistory = data?.filter((v) => v.id === idHistory)[0]
+        ?.arrayHistory;
+      const newData = dataArrayHistory?.filter((v) => v.id !== history?.id);
+      const reference = doc(db, "Information", idHistory);
+      setDoc(reference, {
+        arrayHistory: newData,
+        create_date: data?.filter((v) => v.id === idHistory)[0]?.create_date,
+      })
+        .then(() => {
+          setIsLoadingSave(false);
+          navigation.navigate("HistoryItem");
+        })
+        .catch((error) => {
+          setIsLoadingSave(false);
+          console.error(error);
+          Alert.alert("Error", "Error", [
+            {
+              text: "OK",
+              onPress: () => console.log("Cancel Pressed"),
+              style: "cancel",
+            },
+          ]);
+        });
+      return;
+    }
+
+    if (data && data.length === 0) {
+      const reference = collection(db, "Information", idHistory);
+      deleteDoc(reference)
+        // Handling Promises
+        .then(async () => {
+          navigation.navigate("HistoryItem");
+
+          // MARK: Success
+        })
+        .catch((error) => {
+          // MARK: Failure
+          console.log(error.message);
+        });
+    }
+  };
+  console.log({ idHistory });
     
       function renderNavBar() {
         return(

@@ -27,128 +27,30 @@ const dataEXPENDITURE = [
     value: 'FOOD',
 },
 {
-    label: 'Breakfast',
-    value: 'Breakfast',
-},
-{
-    label: 'Lunch',
-    value: 'Lunch',
-},
-{
-    label: 'Dinner',
-    value: 'Dinner',
-},
-{
-    label: 'Coffee',
-    value: 'Coffee',
-},
-{
-    label: 'Restaurant',
-    value: 'Restaurant',
-},
-{
     label: 'LIVING SERVICE',
     value: 'LIVING SERVICE',
 },
-{
-    label: 'Electric',
-    value: 'Electric',
-},
-{
-    label: 'Telephone charges',
-    value: 'Telephone charges',
-},
-{
-    label: 'Gas',
-    value: 'Gas',
-},
-{
-    label: 'Water',
-    value: 'Water',
-},
-{
-    label: 'Internet',
-    value: 'Internet',
-},
+
 {
     label: 'PERSONAL SERVICE',
     value: 'PERSONAL SERVICE',
 },
 {
-    label: 'Clothes',
-    value: 'Clothes',
-},
-{
-    label: 'Accessory',
-    value: 'Accessory',
-},
-{
-    label: 'Girl friend',
-    value: 'Girl friend',
-},
-{
-    label: 'Party. Wedding, Birthday...',
-    value: 'Party. Wedding, Birthday...',
-},
-{
     label: 'ENJOYMENT',
     value: 'ENJOYMENT',
 },
-{
-    label: 'Shopping',
-    value: 'Shoppuning',
-},
-{
-    label: "Entertainment",
-    value: "Entertainment",
-},
-{
-    label: "Travel",
-    value: "Travel",
-},
-{
-    label: "Movie",
-    value: "Movie",
-},
-{
-    label: "Beautify",
-    value: "Beautify",
-},
+
 {
     label: "MOVEMENT",
     value: "MOVEMENT",
 },
 {
-    label: "Gasoline",
-    value: "Gasoline",
-},
-{
-    label: "Taxi",
-    value: "Taxi",
-},
-{
-    label: "Car repair and maintain",
-    value: "Car repair and maintain",
-},
-{
-    label: "Other",
-    value: "Other",
+    label: "EDUCATION",
+    value: "EDUCATION",
 },
 {
     label: "HEALTHY",
     value: "HEALTHY",
-},
-{
-    label: "Healthcare",
-    value: "Healthcare",
-},
-{
-    label: "Medicine",
-    value: "Medicine",
-},
-{
-    label: "Sport",
-    value: "Sport",
 },
 ];
 const dataREVENUE  = [
