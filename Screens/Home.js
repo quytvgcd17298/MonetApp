@@ -62,7 +62,7 @@ const dataCategory = [
   { label: "REVENUE", value: "REVENUE" },
   { label: "EXPENDITURE", value: "EXPENDITURE" },
 ];
-const Home = () => {
+const Home = ({navigation}) => {
 
   const [category, setCategory] = useState(dataCategory[0].value);
 
@@ -483,6 +483,7 @@ const getCashOut = (data) => {
               <View style={{justifyContent:'flex-end', alignItems:'flex-end'}}>
               <TouchableOpacity
               style={{height:30, width:"30%"}}
+              onPress={()=>{navigation.navigate("Revenue")}}
               >
                 <View style={{flexDirection:'row'}}>
                 <Text style={{fontStyle:'italic', fontWeight:'bold'}}>More Detail</Text>
@@ -594,6 +595,7 @@ const getCashOut = (data) => {
               <View style={{justifyContent:'flex-end', alignItems:'flex-end'}}>
               <TouchableOpacity
               style={{height:30, width:"30%"}}
+              onPress={()=>{navigation.navigate("Spending")}}
               >
                 <View style={{flexDirection:'row'}}>
                 <Text style={{fontStyle:'italic', fontWeight:'bold'}}>More Detail</Text>

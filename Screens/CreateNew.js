@@ -18,6 +18,7 @@ import moment from "moment";
 import { auth, db } from '../data/FirebaseConfig'
 import uuid from "react-native-uuid";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { useIsFocused } from "@react-navigation/native";
 
 import { getDoc, doc, collection, getDocs, documentId, setDoc, addDoc } from "firebase/firestore";
 
@@ -82,6 +83,7 @@ const CreateNew = ({navigation}) => {
   const [who, setWho] = useState("");
   const [location, setLocation]=useState("");
   const [data, setData] = useState([]);
+  const isFocused = useIsFocused();
 
   /* const dataCollectionRef = collection(db, 'information')
   
@@ -232,7 +234,6 @@ const CreateNew = ({navigation}) => {
           ];
           addDoc(reference, {
             create_date: date,
-            // id: auth.currentUser.uid + new Date().getTime(),
             arrayHistory: list,
           })
             // Handling Promises
@@ -328,12 +329,12 @@ const CreateNew = ({navigation}) => {
       data.push({ id: doc.id, ...doc.data() });
     });
     setData(data);
-  }, []);
+  }, [isFocused]);
   const onPressSave = async () => {
     Keyboard.dismiss();
 
     try {
-      if (description && totalMoney !== 0 && image && date) {
+      if (description && totalMoney !== 0 && event && who && location && image && date) {
         if (data?.length > 0) {
           const checkId = data.filter((v) => v.create_date === date);
           if (checkId.length > 0) {
@@ -342,9 +343,10 @@ const CreateNew = ({navigation}) => {
           } else {
             uploadImageAsync(image, checkId, "key");
           }
+        } else {
+          uploadImageAsync(image);
         }
       } else {
-        // uploadImageAsync(image, checkId, key);
       }
     } catch (error) {
       console.log(error);

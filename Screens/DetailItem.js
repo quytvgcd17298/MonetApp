@@ -241,7 +241,7 @@ const DetailItem = ({ route , navigation }) => {
     // We're done with the blob, close and release it
   }
   const onPressSave = () => {
-    if (description && totalMoney !== 0 && image && date) {
+    if (description && totalMoney !== 0 && event && who && location && image && date) {
       uploadImageAsync(image);
     } else {
     }

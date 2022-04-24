@@ -23,6 +23,8 @@ import { Feather } from '@expo/vector-icons';
 import  EditProfileScreen from "./Screens/EditProfileScreen"
 import { HistoryItem } from "./Screens/HistoryItem";
 import  DetailItem  from "./Screens/DetailItem";
+import Revenue from "./Screens/Revenue";
+import Spending from "./Screens/Spending";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -61,6 +63,14 @@ export default function App() {
       <Stack.Screen name = "EditProfileScreen" component={EditProfileScreen}
       options = {{
       headerShown:false }}>
+      </Stack.Screen>
+      <Stack.Screen name = "Revenue" component={Revenue}
+      options = {{
+      headerShown:true }}>
+      </Stack.Screen>
+      <Stack.Screen name = "Spending" component={Spending}
+      options = {{
+      headerShown:true }}>
       </Stack.Screen>
      </Stack.Navigator>
     </NavigationContainer>
