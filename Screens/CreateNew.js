@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, TextInput, ScrollView, StyleSheet, Alert, Keyboard, Platform, Dimensions, Image } from 'react-native'
+import { View, Text, TouchableOpacity, TextInput, ScrollView, StyleSheet, Alert, Keyboard, Platform, Dimensions, Image, ActivityIndicator } from 'react-native'
 import { Ionicons  } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons'; 
@@ -21,6 +21,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useIsFocused } from "@react-navigation/native";
 
 import { getDoc, doc, collection, getDocs, documentId, setDoc, addDoc } from "firebase/firestore";
+import ButtonCustom from '../components/ButtonCustom';
 
 const dataEXPENDITURE = [
   {
@@ -646,28 +647,15 @@ const CreateNew = ({navigation}) => {
           />
         ) : null}
 
-        <TouchableOpacity
-        style = {{
-          height:50,
-          backgroundColor:'#169BD5',
-          marginVertical:25,
-          borderRadius:5,
-          width:300,
-          justifyContent:'center',
-          alignItems:'center',
-        }}
+        <ButtonCustom
+          title="SAVE"
+          backgroundColor={'#169BD5'}
+          width={"80%"}
           isLoading={isLoadingImage || isLoadingSave}
           disabled={isLoadingImage || isLoadingSave}
           onPress={() => {onPressSave()}}
         >
-          <Text
-          style={{
-            fontSize:24,
-            textTransform:'uppercase',
-            color:'white'
-          }}
-          >Save</Text>
-        </TouchableOpacity>
+        </ButtonCustom>
         </View>
         </ScrollView>
     </View>

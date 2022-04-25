@@ -1,12 +1,30 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput, ScrollView, StyleSheet, KeyboardAvoidingView } from 'react-native'
+import React, { useEffect, useState } from "react";
+import { View, Text, TouchableOpacity, Image, ScrollView, StyleSheet, KeyboardAvoidingView } from 'react-native'
 import { Ionicons  } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons'; 
 import { AntDesign } from '@expo/vector-icons'; 
+import { db, auth } from '../data/FirebaseConfig';
+import { collection, getDocs, where } from "firebase/firestore";
+import Icons from "@expo/vector-icons/Ionicons";
+import { useIsFocused } from "@react-navigation/native";
 
 
-const Analysis = () => {
+const Analysis = ({navigation}) => {
+
+  const [info, setInfo] = useState([]);
+  const isFocused = useIsFocused();
+
+  useEffect(async () => {
+    const querySnapshot = await getDocs(collection(db, "UserInformation"));
+    let data = [];
+    querySnapshot.forEach((doc) => {
+      if (doc.data()?.uid === auth.currentUser.uid) {
+        data.push({ id: doc.id, ...doc.data() });
+      }
+    });
+    setInfo(data);
+  }, [isFocused]);
   function renderNavBar() {
     return(
       <View
@@ -15,30 +33,34 @@ const Analysis = () => {
           height:80,
           justifyContent:"space-around",
           alignItems:"flex-end",
-          paddingHorizontal:8,
+          marginVertical:20,
+          marginHorizontal:20,
           borderBottomWidth:3
         }}
       >
-        <TouchableOpacity>
-        <Ionicons name="person-circle" size={50} color="black" />        
-        </TouchableOpacity>
+        <Image
+          style={{ width: 65, height: 65, borderRadius: 90 }}
+          resizeMode="contain"
+          source={{
+            uri: auth?.currentUser?.photoURL
+              ? `${auth.currentUser.photoURL}?type=large`
+              : "https://freesvg.org/img/myAvatar.png",
+          }}
+        />
         <View
-        style={{
-          flexDirection:'column'
-        }}>
-        <Text
-        style={{
-          fontSize:24,
-          fontWeight:'400'
-        }}
-        >Wellcome: {"Quy Tran Van"}</Text>
-        <Text
-         style={{
-          fontSize:18,
-          marginBottom:5,
-          fontWeight:'400'
-         }}
-        >{"Email: quytvgcd17298@fpt.edu.vn"}</Text>
+          style={{
+            paddingLeft: 30,
+            paddingTop: 10,
+            flex: 1,
+          }}
+        >
+          <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+            {info[0]?.username}
+          </Text>
+          <View style={{ height: 5 }} />
+          <Text>Email: {info[0]?.email}</Text>
+          <View style={{ height: 5 }} />
+          <Text>Phone Number: {info[0]?.phone}</Text>
         </View>
       </View>
     )
@@ -63,6 +85,7 @@ const Analysis = () => {
           borderRadius:10,
           borderWidth:2
         }}
+        onPress={()=>{navigation.navigate("HistoryItem")}}
         >
         <FontAwesome5 name="history" size={30} color="black" /> 
         <Text>HISTORY</Text>
@@ -78,9 +101,14 @@ const Analysis = () => {
           justifyContent:'center',
           borderRadius:10,
           borderWidth:2
-        }}>
-        <AntDesign name="piechart" size={30} color="orange" /> 
-        <Text>REVENUE AND EXPENDITURE</Text> 
+        }}
+        onPress={() =>
+          {navigation.navigate("EditProfileScreen",{
+            profile: info[0],
+          })}
+        }>
+        <Ionicons name="person" size={30} color="black" /> 
+        <Text>EDIT PERSONAL INFORMATION</Text>
         </TouchableOpacity>
       </View>
       <View
@@ -99,6 +127,7 @@ const Analysis = () => {
           borderRadius:10,
           borderWidth:2
         }}
+        onPress={()=>{navigation.navigate("Spending")}}
         >
         <Ionicons name="ios-bar-chart-sharp" size={30} color="red" /> 
         <Text>SPENDING ANALYSIS</Text>
@@ -114,7 +143,8 @@ const Analysis = () => {
           justifyContent:'center',
           borderRadius:10,
           borderWidth:2
-        }}>
+        }}
+        onPress={()=>{navigation.navigate("Revenue")}}>
         <Ionicons name="ios-bar-chart-sharp" size={30} color="green" />
         <Text>REVENUE ANALYSIS</Text> 
         </TouchableOpacity>
@@ -136,8 +166,8 @@ const Analysis = () => {
           borderWidth:2
         }}
         >
-        <Ionicons name="person" size={30} color="black" /> 
-        <Text>PERSONAL INFORMATION</Text>
+        <AntDesign name="piechart" size={30} color="orange" /> 
+        <Text>REVENUE AND EXPENDITURE</Text> 
         </TouchableOpacity>
         <TouchableOpacity
         style={{

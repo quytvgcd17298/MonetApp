@@ -21,6 +21,7 @@ import TextAuthForm from '../components/TextAuthForm';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { addDoc, collection, doc } from "firebase/firestore";
 import { auth, db } from '../data/FirebaseConfig'
+import ButtonCustom from '../components/ButtonCustom';
 
 
 const Register = ({navigation}) => {
@@ -77,6 +78,9 @@ const Register = ({navigation}) => {
             uid: auth.currentUser.uid,
           });
           setIsLoadingSignUp(false);
+           setTimeout(() => {
+          navigation.navigate("Login");
+         }, 500);
         })
         .catch((error) => {
           setIsLoadingSignUp(false);
@@ -234,15 +238,13 @@ const Register = ({navigation}) => {
               />
             )}
           />
-
-        <TouchableOpacity
-        style = {styles.buttonContainer}
-        onPress={onSubmit}
-        isLoading={isLoadingSignUp}
-        disabled={isLoadingSignUp}
-        >
-          <Text style = {styles.buttonText}>Register</Text>
-        </TouchableOpacity>
+        <ButtonCustom
+            backgroundColor={'#f7c744'}
+            title="Sign Up"
+            onPress={onSubmit}
+            isLoading={isLoadingSignUp}
+            disabled={isLoadingSignUp}
+        />
         <TouchableOpacity
         style = {{  
           backgroundColor:'white',

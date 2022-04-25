@@ -6,12 +6,13 @@ import {
    Text, 
    StyleSheet, 
    TextInput,
+   ActivityIndicator,
    ScrollView, 
    TouchableWithoutFeedback,
    KeyboardAvoidingView, 
    Keyboard, TouchableOpacity } from 'react-native';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../data/FirebaseConfig';
+import { auth, db } from '../data/FirebaseConfig';
 import { Controller, useForm } from "react-hook-form";
 
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -20,10 +21,19 @@ import { loginSchema } from "../Validation/loginValidation";
 import TextAuthForm from '../components/TextAuthForm';
 
 import Icon from 'react-native-vector-icons/AntDesign'
+import ButtonCustom from '../components/ButtonCustom';
+import { FacebookAuthProvider, signInWithCredential, GoogleAuthProvider, } from "firebase/auth";
+import * as Facebook from "expo-facebook";
+import { addDoc, collection } from "firebase/firestore";
+import * as Google from "expo-google-app-auth";
+
 
 const Login = ({navigation}) => {
   const [isLoadingLogin, setIsLoadingLogin] = useState(false);
-/*   const[email, setEmail] = useState("");
+  const [isLoadingLoginSocial, setIsLoadingLoginSocial] = useState(false);
+
+
+  /*   const[email, setEmail] = useState("");
   const[password, setPassword] = useState(""); */
 
   /* const loginHandlle =() => {
@@ -77,6 +87,105 @@ const Login = ({navigation}) => {
   const registerNavigation = () => {
     navigation.navigate("Register")
   };
+
+
+
+  const SignInWidthFacebook = async () => {
+    try {
+      await Facebook.initializeAsync({
+        appId: "710663620367320",
+      });
+
+      const { type, token } = await Facebook.logInWithReadPermissionsAsync({
+        permissions: ["public_profile", "email"],
+      });
+
+      if (type === "success") {
+        setIsLoadingLoginSocial(true);
+        // Build Firebase credential with the Facebook access token.
+        const facebookAuthProvider = new FacebookAuthProvider.credential(token);
+
+        // Sign in with credential from the Facebook user.
+        signInWithCredential(auth, facebookAuthProvider)
+          .then((res) => {
+            console.log(res.user.providerData[0]?.displayName);
+            const reference = collection(db, "User");
+
+            addDoc(reference, {
+              username: res.user.providerData[0]?.displayName,
+              address: "",
+              phone: res.user.providerData[0]?.phoneNumber
+                ? res.user.providerData[0]?.phoneNumber
+                : "",
+              email: res.user.providerData[0]?.email,
+              uid: auth.currentUser.uid,
+            })
+              .then((value) => {
+                console.log({ value });
+                setIsLoadingLoginSocial(false);
+              })
+              .catch((error) => {
+                console.log("error", error);
+                setIsLoadingLoginSocial(false);
+              });
+          })
+          .catch((error) => {
+            console.log(error);
+            setIsLoadingLoginSocial(false);
+            // Handle Errors here.
+          });
+      }
+    } catch (error) {
+      console.log({ error });
+      setIsLoadingLoginSocial(false);
+    }
+  };
+  const signInWithGoogle = async () => {
+    const { type, user, idToken, accessToken } = await Google.logInAsync({
+      androidClientId:
+        "938148996303-a4m4ktmja363mmb7utjbatdsrnh1fsuf.apps.googleusercontent.com",
+      webClientId:
+        "938148996303-r62o2m1lgls6skv27beb7jklabg63a8i.apps.googleusercontent.com",
+      scopes: ["profile", "email"],
+    });
+    setIsLoadingLoginSocial(true);
+
+    const googleAuthProvider = new GoogleAuthProvider.credential(
+      idToken,
+      accessToken
+    );
+    signInWithCredential(auth, googleAuthProvider)
+      .then((res) => {
+        const reference = collection(db, "User");
+
+        addDoc(reference, {
+          username: res.user.providerData[0]?.displayName,
+          address: "",
+          phone: res.user.providerData[0]?.phoneNumber
+            ? res.user.providerData[0]?.phoneNumber
+            : "",
+          email: res.user.providerData[0]?.email,
+          uid: auth.currentUser.uid,
+        })
+          .then((value) => {
+            setIsLoadingLoginSocial(false);
+            console.log({ value });
+          })
+          .catch((error) => {
+            setIsLoadingLoginSocial(false);
+            console.log("error", error);
+          });
+      })
+      .catch((error) => {
+        setIsLoadingLoginSocial(false);
+        console.log({ error });
+      });
+  };
+  
+  if (isLoadingLoginSocial) {
+    return <Loading/>;
+  }
+
 
   return (
     <SafeAreaView style = {styles.container}>
@@ -183,22 +292,25 @@ const Login = ({navigation}) => {
           justifyContent:"center",
           paddingVertical:20
         }}>
-        <TouchableOpacity>
+        <TouchableOpacity
+        onPress={() => { SignInWidthFacebook()}}
+        >
         <Icon name="facebook-square" color="#eee" size={40} />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity
+        onPress={() => { signInWithGoogle()}}
+        >
         <Icon name="google" color="#eee" size={40} />
         </TouchableOpacity>
         </View>
-        <TouchableOpacity
-        style = {styles.buttonContainer}
-        onPress={onSubmit}
-        isLoading={isLoadingLogin}
-        disabled={isLoadingLogin}
-        >
-          <Text
-          style = {styles.buttonText}>Login</Text>
-        </TouchableOpacity>
+        <ButtonCustom
+            disabled={isLoadingLogin}
+            backgroundColor={"#f7c744"}
+            width={350}
+            title="Login"
+            onPress={onSubmit}
+            isLoading={isLoadingLogin}
+          />
       </View>
       </View>
       </TouchableWithoutFeedback>
@@ -260,3 +372,17 @@ buttonText:{
 
 });
 export default Login;
+export const Loading = ({ theme = "white", size = "large" }) => {
+  const color = theme === "white" ? "#00bdcd" : "#fff";
+  return (
+    <View
+      style={{
+        ...StyleSheet.absoluteFill,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <ActivityIndicator size={size} color={color} />
+    </View>
+  );
+};

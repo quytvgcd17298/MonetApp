@@ -13,7 +13,6 @@ import MyWallet from './Screens/MyWallet'
 import CreateNew from "./Screens/CreateNew"; 
 import Analysis from "./Screens/Analysis"; 
 import More from "./Screens/More";
-import EditPage from "./Screens/EditPage"
 
 import { FontAwesome5 } from '@expo/vector-icons'; 
 import { Entypo } from '@expo/vector-icons'; 
@@ -49,10 +48,6 @@ export default function App() {
         headerShown:false }}
      />
       <Stack.Screen name = "HistoryItem" component={HistoryItem}
-      options = {{
-      headerShown:false }}>
-      </Stack.Screen>
-      <Stack.Screen name = "EditPage" component={EditPage}
       options = {{
       headerShown:false }}>
       </Stack.Screen>

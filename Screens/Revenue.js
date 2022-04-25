@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { auth, db } from '../data/FirebaseConfig'
 import { useIsFocused } from "@react-navigation/native";
-import RNPickerSelect from "react-native-picker-select";
 import Icons from "@expo/vector-icons/Ionicons";
 import { BarChart } from "react-native-chart-kit";
 import moment from "moment";

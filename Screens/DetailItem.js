@@ -25,6 +25,7 @@ import {
   import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
   import { db } from '../data/FirebaseConfig'
   import uuid from "react-native-uuid";
+import ButtonCustom from "../components/ButtonCustom";
   
   
   const dataEXPENDITURE = [
@@ -557,51 +558,22 @@ const DetailItem = ({ route , navigation }) => {
             style={{ width:"100%", height:200 }}
           />
         ) : null}
-
-        <View style={{ justifyContent:"space-between", flexDirection:"row"}}>
-        <TouchableOpacity
-        style = {{
-          height:50,
-          width:150,
-          backgroundColor:'green',
-          marginVertical:25,
-          borderRadius:5,
-          justifyContent:'center',
-          alignItems:'center',
-        }}
+        <ButtonCustom
+          backgroundColor={'green'}
+          title={'EDIT'}
+          width={'80%'}
           isLoading={isLoadingImage || isLoadingSave}
           disabled={isLoadingImage || isLoadingSave}
           onPress={() => {onPressSave()}}
         >
-          <Text
-          style={{
-            fontSize:24,
-            textTransform:'uppercase',
-            color:'white'
-          }}
-          >EDIT</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-        style = {{
-          height:50,
-          width:150,
-          backgroundColor:'red',
-          marginVertical:25,
-          borderRadius:5,
-          justifyContent:'center',
-          alignItems:'center',
-        }}
+        </ButtonCustom>
+        <ButtonCustom
+          title={'DELETE'}
+          backgroundColor={'red'}
+          width={'80%'}
           onPress={() => {onPressDelete()}}
         >
-          <Text
-          style={{
-            fontSize:24,
-            textTransform:'uppercase',
-            color:'white'
-          }}
-          >DELETE</Text>
-        </TouchableOpacity>
-        </View>
+        </ButtonCustom>
         </View>
         </ScrollView>
     </View>
