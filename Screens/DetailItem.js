@@ -21,10 +21,10 @@ import {
     setDoc,
     updateDoc,
   } from "firebase/firestore";
-  import moment from "moment";
-  import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-  import { db } from '../data/FirebaseConfig'
-  import uuid from "react-native-uuid";
+import moment from "moment";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { db } from '../data/FirebaseConfig'
+import uuid from "react-native-uuid";
 import ButtonCustom from "../components/ButtonCustom";
   
   
@@ -75,7 +75,7 @@ const DetailItem = ({ route , navigation }) => {
   const [description, setDescription] = useState(history?.description);
   const [totalMoney, setTotalMoney] = useState(history?.totalMoney);
   const [event, setEvent]= useState(history?.event);
-  const [who, setWho]= useState(history?.withwho);
+  const [withwho, setWho]= useState(history?.withwho);
   const [location, setLocation]= useState(history?.location);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [date, setDate] = useState(history?.create_date);
@@ -165,9 +165,9 @@ const DetailItem = ({ route , navigation }) => {
               genre,
               event,
               totalMoney,
+              create_date: date,
               location,
               withwho,
-              create_date: date,
               imageUrl,
             };
           }
@@ -207,11 +207,10 @@ const DetailItem = ({ route , navigation }) => {
               description,
               genre,
               totalMoney,
+              create_date: date,
               event,
-              totalMoney,
               location,
               withwho,
-              create_date: date,
             };
           }
           return v;
@@ -242,7 +241,7 @@ const DetailItem = ({ route , navigation }) => {
     // We're done with the blob, close and release it
   }
   const onPressSave = () => {
-    if (description && totalMoney !== 0 && event && who && location && image && date) {
+    if (description && totalMoney && event && withwho && location !== 0 && image && date) {
       uploadImageAsync(image);
     } else {
     }
@@ -513,7 +512,7 @@ const DetailItem = ({ route , navigation }) => {
           <TextInput
           style={styles.input}
           placeholder={"With who?"}
-          value={who}
+          value={withwho}
           onChangeText={(value)=>setWho(value)}
           ></TextInput>
           </View>

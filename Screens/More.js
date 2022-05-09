@@ -11,6 +11,7 @@ import { db, auth } from '../data/FirebaseConfig';
 import { collection, getDocs, where } from "firebase/firestore";
 import Icons from "@expo/vector-icons/Ionicons";
 import { useIsFocused } from "@react-navigation/native";
+import { signOut } from "firebase/auth";
 
 const More = ({navigation}) => {
   const [info, setInfo] = useState([]);

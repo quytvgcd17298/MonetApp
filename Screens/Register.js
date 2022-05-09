@@ -78,7 +78,7 @@ const Register = ({navigation}) => {
             uid: auth.currentUser.uid,
           });
           setIsLoadingSignUp(false);
-           setTimeout(() => {
+          setTimeout(() => {
           navigation.navigate("Login");
          }, 500);
         })

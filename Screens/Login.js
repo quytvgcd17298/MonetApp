@@ -27,7 +27,6 @@ import * as Facebook from "expo-facebook";
 import { addDoc, collection } from "firebase/firestore";
 import * as Google from "expo-google-app-auth";
 
-
 const Login = ({navigation}) => {
   const [isLoadingLogin, setIsLoadingLogin] = useState(false);
   const [isLoadingLoginSocial, setIsLoadingLoginSocial] = useState(false);
@@ -88,8 +87,6 @@ const Login = ({navigation}) => {
     navigation.navigate("Register")
   };
 
-
-
   const SignInWidthFacebook = async () => {
     try {
       await Facebook.initializeAsync({
@@ -109,7 +106,7 @@ const Login = ({navigation}) => {
         signInWithCredential(auth, facebookAuthProvider)
           .then((res) => {
             console.log(res.user.providerData[0]?.displayName);
-            const reference = collection(db, "User");
+            const reference = collection(db, "UserInformation");
 
             addDoc(reference, {
               username: res.user.providerData[0]?.displayName,
@@ -123,6 +120,7 @@ const Login = ({navigation}) => {
               .then((value) => {
                 console.log({ value });
                 setIsLoadingLoginSocial(false);
+                navigation.navigate("Monet")
               })
               .catch((error) => {
                 console.log("error", error);
@@ -140,8 +138,9 @@ const Login = ({navigation}) => {
       setIsLoadingLoginSocial(false);
     }
   };
+
   const signInWithGoogle = async () => {
-    const { type, user, idToken, accessToken } = await Google.logInAsync({
+    const { type, user, idToken, accessToken } = await Google.logInAsync ({
       androidClientId:
         "938148996303-a4m4ktmja363mmb7utjbatdsrnh1fsuf.apps.googleusercontent.com",
       webClientId:
@@ -156,7 +155,7 @@ const Login = ({navigation}) => {
     );
     signInWithCredential(auth, googleAuthProvider)
       .then((res) => {
-        const reference = collection(db, "User");
+        const reference = collection(db, "UserInformation");
 
         addDoc(reference, {
           username: res.user.providerData[0]?.displayName,
@@ -293,12 +292,12 @@ const Login = ({navigation}) => {
           paddingVertical:20
         }}>
         <TouchableOpacity
-        onPress={() => { SignInWidthFacebook()}}
+        onPress={() => {SignInWidthFacebook();}}
         >
         <Icon name="facebook-square" color="#eee" size={40} />
         </TouchableOpacity>
         <TouchableOpacity
-        onPress={() => { signInWithGoogle()}}
+        onPress={() => {signInWithGoogle();}}
         >
         <Icon name="google" color="#eee" size={40} />
         </TouchableOpacity>

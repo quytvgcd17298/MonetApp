@@ -81,7 +81,7 @@ const CreateNew = ({navigation}) => {
 
   const [description, setDescription] = useState("");
   const [event, setEvent] = useState("");
-  const [who, setWho] = useState("");
+  const [withwho, setWho] = useState("");
   const [location, setLocation]=useState("");
   const [data, setData] = useState([]);
   const isFocused = useIsFocused();
@@ -177,7 +177,7 @@ const CreateNew = ({navigation}) => {
               description: description,
               create_date: date,
               event: event,
-              withwho: who,
+              withwho: withwho,
               location: location,
               imageUrl: imageUrl,
             },
@@ -228,7 +228,7 @@ const CreateNew = ({navigation}) => {
               description: description,
               create_date: date,
               event: event,
-              withwho: who,
+              withwho: withwho,
               location: location,
               imageUrl,
             },
@@ -282,7 +282,7 @@ const CreateNew = ({navigation}) => {
           description: description,
           create_date: date,
           event: event,
-          withwho: who,
+          withwho: withwho,
           location: location,
           imageUrl,
         };
@@ -335,7 +335,7 @@ const CreateNew = ({navigation}) => {
     Keyboard.dismiss();
 
     try {
-      if (description && totalMoney !== 0 && event && who && location && image && date) {
+      if (description && totalMoney && event && withwho && location !== 0 && image && date ) {
         if (data?.length > 0) {
           const checkId = data.filter((v) => v.create_date === date);
           if (checkId.length > 0) {
@@ -601,7 +601,7 @@ const CreateNew = ({navigation}) => {
           <TextInput
           style={styles.input}
           placeholder={"With who?"}
-          value={who}
+          value={withwho}
           onChangeText={(value)=>setWho(value)}
           ></TextInput>
           </View>
